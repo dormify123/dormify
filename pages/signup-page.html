@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Signup</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <form id="loginForm" onsubmit="return validateLoginForm()" autocomplete="on">
+    <form id="signupForm" onsubmit="return validateSignupForm()" autocomplete="on">
         <div class="container">
-            <h1>Login</h1>
+            <h1>Signup</h1>
+            <label for="email">Email</label>
+            <input type="email" name="email" required>
             <label for="username">Username</label>
             <input type="text" name="username" required>
             <label for="password">Password</label>
             <input type="password" name="password" required>
+            <label for="password">Confirm Password</label>
+            <input type="password" name="confirm_password" required>
             <label>
                 <input type="checkbox" name="remember"> Remember password
             </label>
-            <button type="submit" class="loginbtn">Login</button>
-            <p>Don't have an account? <a href="signup.html">Sign up here</a>.</p>
-            <div id="loginError" class="error-message"></div>
+            <button type="submit" class="signupbtn">Signup</button>
+            <div id="signupError" class="error-message"></div>
         </div>
     </form>
     <script src="index.js"></script>

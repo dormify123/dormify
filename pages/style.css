@@ -1,0 +1,49 @@
+body{
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: Arial;
+}
+
+.container{
+    max-width: 400px;
+    background-color: white;
+    border-radius: 10px;
+    margin: auto;
+    padding: 20px;
+}
+
+h1{
+    text-align: center;
+    color: #4CAF50;
+}
+
+input[type="text"], input[type="password"], input[type="email"]{
+    margin-bottom: 10px;
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.loginbtn, .signupbtn{
+    background-color: #4CAF50;
+    border-radius: 10px;
+    color: white;
+    padding: 16px;
+    margin: 20px;
+    border: none;
+    cursor: pointer;
+    width: 90%;
+    display: block;
+}
+
+.loginbtn:hover, .signupbtn:hover{
+    background-color: #45a049;
+}
+
+#loginError, #signupError{
+    color: red;
+    margin-top: 10px;
+    text-align: center;
+}
