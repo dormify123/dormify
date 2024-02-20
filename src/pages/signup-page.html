@@ -9,17 +9,18 @@
         <div class="container">
             <h1>Signup</h1>
             <label for="email">Email</label>
-            <input type="email" name="email" required>
+            <input type="email" placeholder="Type your email..." name="email" required>
             <label for="username">Username</label>
-            <input type="text" name="username" required>
+            <input type="text" placeholder="Type your username..." name="username" required>
             <label for="password">Password</label>
-            <input type="password" name="password" required>
+            <input type="password" placeholder="Type your password..." name="password" required>
             <label for="password">Confirm Password</label>
-            <input type="password" name="confirm_password" required>
+            <input type="password" placeholder="Type the same password again..." name="confirm_password" required>
             <label>
                 <input type="checkbox" name="remember"> Remember password
             </label>
             <button type="submit" class="signupbtn">Signup</button>
+            <p>Already have an account? <a href="../pages/login-page.html">Login here</a>.</p>
             <div id="signupError" class="error-message"></div>
         </div>
     </form>
