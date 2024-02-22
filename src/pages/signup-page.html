@@ -26,8 +26,8 @@
     </form>
     <script src="../functionality/index.js"></script>
     <!-- these two following scripts are related to accounts in the database, include in any html file that needs the database -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src = "../postgres/accounts.js"></script>
+    <script src ="../postgres/accounts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onload="loadWrapperFunctions(supabase)"></script>
     <!-- accounts.js includes all the wrapper functions for working with the database from the supabase library, the first script includes the supabase library itself -->
 </body>
 </html>
