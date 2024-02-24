@@ -5,13 +5,13 @@
     <link rel="stylesheet" type="text/css" href="../style/style.css">
 </head>
 <body>
-    <form id="loginForm" onsubmit="return validateLoginForm()" autocomplete="on">
+    <form id="loginForm" autocomplete="on">
         <div class="container">
             <h1>Login</h1>
             <label for="username">Username</label>
-            <input type="text" placeholder="Type your username..." name="username" required>
+            <input id = "user_email" type="text" placeholder="Type your username..." name="username" required>
             <label for="password">Password</label>
-            <input type="password" placeholder="Type your password..." name="password" required>
+            <input id ="user_password" type="password" placeholder="Type your password..." name="password" required>
             <label>
                 <input type="checkbox" name="remember"> Remember password
             </label>
@@ -20,6 +20,10 @@
             <div id="loginError" class="error-message"></div>
         </div>
     </form>
-    <script src="../functionality/index.js"></script>
+    <!-- these two following scripts are related to accounts in the database, include in any html file that needs the database -->
+    <script src ="../postgres/accounts.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <!-- accounts.js includes all the wrapper functions for working with the database from the supabase library, the 2nd script includes the supabase library itself -->
+    <script src="../functionality/login.js" defer></script>
 </body>
 </html>

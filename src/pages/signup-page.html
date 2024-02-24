@@ -5,15 +5,15 @@
     <link rel="stylesheet" type="text/css" href="../style/style.css">
 </head>
 <body>
-    <form id="signupForm" onsubmit="return validateSignupForm()" autocomplete="on">
+    <form id="signupForm" autocomplete="on">
         <div class="container">
             <h1>Signup</h1>
             <label for="email">Email</label>
-            <input type="email" placeholder="Type your email..." name="email" required>
+            <input type="email" id = "user_email" placeholder="Type your email..." name="email" required >
             <label for="username">Username</label>
             <input type="text" placeholder="Type your username..." name="username" required>
             <label for="password">Password</label>
-            <input type="password" placeholder="Type your password..." name="password" required>
+            <input id ="user_password" type="password" placeholder="Type your password..." name="password" required>
             <label for="password">Confirm Password</label>
             <input type="password" placeholder="Type the same password again..." name="confirm_password" required>
             <label>
@@ -24,10 +24,10 @@
             <div id="signupError" class="error-message"></div>
         </div>
     </form>
-    <script src="../functionality/index.js"></script>
     <!-- these two following scripts are related to accounts in the database, include in any html file that needs the database -->
-    <script src ="../postgres/accounts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onload="loadWrapperFunctions(supabase)"></script>
-    <!-- accounts.js includes all the wrapper functions for working with the database from the supabase library, the first script includes the supabase library itself -->
+    <script src ="../postgres/accounts.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <!-- accounts.js includes all the wrapper functions for working with the database from the supabase library, the 2nd script includes the supabase library itself -->
+    <script src="../functionality/signup.js" defer></script>
 </body>
 </html>
