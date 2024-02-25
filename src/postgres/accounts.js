@@ -166,14 +166,14 @@ function loadWrapperFunctions(supabase)
         setSessionCookie("sessionCookie",JSON.stringify(data),1);
         console.log(data);
         console.log("name is: "  + user_name);
+        const {db_error} = await createUser(data.user.id,user_name,"",mail);
+        console.log(db_error);
         window.location.href = "../pages/login-page.html";
        }
        else 
        {
         console.log("Something went wrong: " + error.message);
        }
-       const {db_error} = await createUser(data.user.id,user_name,"",mail);
-       console.log(db_error);
        
     }
     async function userSignOut()
