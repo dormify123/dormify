@@ -1,5 +1,7 @@
 function loadWrapperFunctions(supabase)
 {
+
+    //supabase connection section
     console.log(supabase);
     const _supabase = supabase.createClient("https://ieioqboeihxduwuipmim.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllaW9xYm9laWh4ZHV3dWlwbWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDg0MzA1MTAsImV4cCI6MjAyNDAwNjUxMH0.VLnvpD2Ejft5ZeUtZODHZJkcsI7JbwNK_zv24iazbbk",{
         auth: {
@@ -9,6 +11,14 @@ function loadWrapperFunctions(supabase)
         }
       });
     console.log(_supabase);
+
+
+
+
+
+
+
+    //everything related to handling user login sessions with cookies
     function retrieveSession(){
       var data = getSessionFromCookie("sessionCookie");
       console.log(data);
@@ -35,37 +45,32 @@ function loadWrapperFunctions(supabase)
         const [name] = cookie.split("=");
         document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
       }
-    }    
-    retrieveSession();
-    async function getUsers()
-    {
-        const {data,error} = await _supabase.from('users').select(`name,lastname`);
-        if(error != null)
-            console.log("error fetching data: " + error.message);
-        else 
-        {
-            return data;
-        }
-        
     }
-    const { data } = _supabase.auth.onAuthStateChange((event, session) => {
-      console.log(event, session)
-  
-      if (event === 'INITIAL_SESSION') {
-      // handle initial session
-      } else if (event === 'SIGNED_IN') {
-        console.log("logged in event!");
-        updateSessionUI(session);
-      } else if (event === 'SIGNED_OUT') {
-      // handle sign out event
-      } else if (event === 'PASSWORD_RECOVERY') {
-      // handle password recovery event
-      } else if (event === 'TOKEN_REFRESHED') {
-      // handle token refreshed event
-      } else if (event === 'USER_UPDATED') {
-      // handle user updated event
+    function setSessionCookie(sessionName, sessionValue, daysToExpire)
+    {
+      const date = new Date();
+      date.setTime(date.getTime() + (daysToExpire * 24 * 60 * 60 * 1000));
+      const expires = "expires=" + date.toUTCString();
+      const cookieString = `${sessionName}=${sessionValue};${expires};path=/`;
+      document.cookie = cookieString;
+      console.log(document.cookie);
+    }
+    function removeCookie(cookieName)
+    {
+      const cookie_string = document.cookie;
+      const cookie_array = cookie_string.split("; ");
+      for(const cookie of cookie_array)
+      {
+        const [name, value] = cookie.split('=');
+        if(name == cookieName)
+        {
+          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+          console.log("Cookie " + cookieName + " removed!");
+          return;
+        }
       }
-    });
+      console.log("Cookie not found");
+    }
     function updateSessionUI(session)
     {
       var status = document.createElement("text");
@@ -96,30 +101,57 @@ function loadWrapperFunctions(supabase)
         document.getElementById("header").appendChild(status);
       }
     }
-    function setSessionCookie(sessionName, sessionValue, daysToExpire)
-    {
-      const date = new Date();
-      date.setTime(date.getTime() + (daysToExpire * 24 * 60 * 60 * 1000));
-      const expires = "expires=" + date.toUTCString();
-      const cookieString = `${sessionName}=${sessionValue};${expires};path=/`;
-      document.cookie = cookieString;
-      console.log(document.cookie);
-    }
-    function removeCookie(cookieName)
-    {
-      const cookie_string = document.cookie;
-      const cookie_array = cookie_string.split("; ");
-      for(const cookie of cookie_array)
-      {
-        const [name, value] = cookie.split('=');
-        if(name == cookieName)
-        {
-          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-          console.log("Cookie " + cookieName + " removed!");
-          return;
-        }
+    
+
+
+
+    //session retrival on page-load, checks if there is a session active and loads user information if there is
+    retrieveSession();
+
+
+
+
+
+
+
+
+
+    //database auth event handlers
+    const { data } = _supabase.auth.onAuthStateChange((event, session) => {
+      console.log(event, session)
+  
+      if (event === 'INITIAL_SESSION') {
+      // handle initial session
+      } else if (event === 'SIGNED_IN') {
+        console.log("logged in event!");
+        updateSessionUI(session);
+      } else if (event === 'SIGNED_OUT') {
+      // handle sign out event
+      } else if (event === 'PASSWORD_RECOVERY') {
+      // handle password recovery event
+      } else if (event === 'TOKEN_REFRESHED') {
+      // handle token refreshed event
+      } else if (event === 'USER_UPDATED') {
+      // handle user updated event
       }
-      console.log("Cookie not found");
+    });
+
+
+
+
+
+
+    //user signup-signin-logout functions
+    async function getUsers()
+    {
+        const {data,error} = await _supabase.from('users').select(`name,lastname`);
+        if(error != null)
+            console.log("error fetching data: " + error.message);
+        else 
+        {
+            return data;
+        }
+        
     }
     async function userSignUp()
     {
@@ -166,6 +198,9 @@ function loadWrapperFunctions(supabase)
             document.getElementById("loginError").textContent = error.message;
           }
     }
+
+
+    //adds user to main DB, on creation
     async function createUser(_id,_name,_lastName, _email)
     {
         const {error} = await _supabase.from('users').insert({id:_id, name: _name, lastname: _lastName, email: _email});
