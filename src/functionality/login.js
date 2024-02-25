@@ -2,6 +2,7 @@ const {getUsers, userLogIn} = loadWrapperFunctions(supabase);
 document.getElementById("loginForm").addEventListener("submit", function(event){
     event.preventDefault();
     validateLoginForm();
+    console.log(window.globalVar);
 });
 function validateLoginForm() {
     var username = document.getElementById('loginForm').elements['username'];

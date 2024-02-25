@@ -4,7 +4,7 @@ body{
     background-repeat: no-repeat;
     font-family: Arial;
     height: 100vh;
-    margin: 0;
+    margin: 20;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,12 +17,31 @@ body{
     margin: auto;
     padding: 20px;
 }
-
+.header{
+    display:flex;
+    flex-direction: column;
+    width:100%;
+    height: 40px;
+    background-color: lightgray;
+    justify-content: center;
+}
+.body_table{
+    margin-top: 60px;
+}
+.button_href{
+    border-width: 0;
+    background-color: transparent;
+    color:red;
+    font-weight: bold;
+}
 h1{
     text-align: center;
     color: #4248D1;
 }
-
+.form_container{
+    width:100%;
+    height:100%;
+}
 input[type="text"], input[type="password"], input[type="email"]{
     margin-top: 10px;
     margin-bottom: 10px;

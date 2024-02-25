@@ -5,21 +5,35 @@
     <link rel="stylesheet" type="text/css" href="../style/style.css">
 </head>
 <body>
-    <form id="loginForm" autocomplete="on">
-        <div class="container">
-            <h1>Login</h1>
-            <label for="username">Username</label>
-            <input id = "user_email" type="text" placeholder="Type your username..." name="username" required>
-            <label for="password">Password</label>
-            <input id ="user_password" type="password" placeholder="Type your password..." name="password" required>
-            <label>
-                <input type="checkbox" name="remember"> Remember password
-            </label>
-            <button type="submit" class="loginbtn">Login</button>
-            <p>Don't have an account? <a href="../pages/signup-page.html">Sign up here</a>.</p>
-            <div id="loginError" class="error-message"></div>
-        </div>
-    </form>
+    <table>
+        <thead>
+            <th>
+                <div class = "container header" id = "header">
+                    <text id="session_status">Currently not signed in</text>
+                </div>
+            </th>
+        </thead>
+        <tbody>
+            <td>
+                <form id="loginForm" autocomplete="on">
+                    <div class="container">
+                        <h1>Login</h1>
+                        <label for="username">Username</label>
+                        <input id = "user_email" type="text" placeholder="Type your username..." name="username" required>
+                        <label for="password">Password</label>
+                        <input id ="user_password" type="password" placeholder="Type your password..." name="password" required>
+                        <label>
+                            <input type="checkbox" name="remember"> Remember password
+                        </label>
+                        <button type="submit" class="loginbtn">Login</button>
+                        <p>Don't have an account? <a href="../pages/signup-page.html">Sign up here</a>.</p>
+                        <div id="loginError" class="error-message"></div>
+                    </div>
+                </form>
+            </td>
+        </tbody>
+
+    </table>
     <!-- these two following scripts are related to accounts in the database, include in any html file that needs the database -->
     <script src ="../postgres/accounts.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>

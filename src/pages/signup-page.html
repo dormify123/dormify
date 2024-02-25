@@ -5,25 +5,38 @@
     <link rel="stylesheet" type="text/css" href="../style/style.css">
 </head>
 <body>
-    <form id="signupForm" autocomplete="on">
-        <div class="container">
-            <h1>Signup</h1>
-            <label for="email">Email</label>
-            <input type="email" id = "user_email" placeholder="Type your email..." name="email" required >
-            <label for="username">Username</label>
-            <input type="text" placeholder="Type your username..." name="username" required>
-            <label for="password">Password</label>
-            <input id ="user_password" type="password" placeholder="Type your password..." name="password" required>
-            <label for="password">Confirm Password</label>
-            <input type="password" placeholder="Type the same password again..." name="confirm_password" required>
-            <label>
-                <input type="checkbox" name="remember"> Remember password
-            </label>
-            <button type="submit" class="signupbtn">Signup</button>
-            <p>Already have an account? <a href="../pages/login-page.html">Login here</a>.</p>
-            <div id="signupError" class="error-message"></div>
-        </div>
-    </form>
+    <table class = "body_table">
+        <thead>
+            <th>
+                <div class = "container header" id = "header">
+                    <text id="session_status">Currently not signed in</text>
+                </div>
+            </th>
+        </thead>
+        <tbody>
+            <td>
+                <form id="signupForm" autocomplete="on">
+                    <div class="container">
+                        <h1>Signup</h1>
+                        <label for="email">Email</label>
+                        <input type="email" id = "user_email" placeholder="Type your email..." name="email" required >
+                        <label for="username">Username</label>
+                        <input type="text" id = "user_name" placeholder="Type your username..." name="username" required>
+                        <label for="password">Password</label>
+                        <input id ="user_password" type="password" placeholder="Type your password..." name="password" required>
+                        <label for="password">Confirm Password</label>
+                        <input type="password" placeholder="Type the same password again..." name="confirm_password" required>
+                        <label>
+                            <input type="checkbox" name="remember"> Remember password
+                        </label>
+                        <button type="submit" class="signupbtn">Signup</button>
+                        <p>Already have an account? <a href="../pages/login-page.html">Login here</a>.</p>
+                        <div id="signupError" class="error-message"></div>
+                    </div>
+                </form>
+            </td>
+        </tbody>
+    </table>
     <!-- these two following scripts are related to accounts in the database, include in any html file that needs the database -->
     <script src ="../postgres/accounts.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
