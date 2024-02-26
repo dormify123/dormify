@@ -173,6 +173,7 @@ function loadWrapperFunctions(supabase)
        else 
        {
         console.log("Something went wrong: " + error.message);
+        document.getElementById("signupError").textContent = error.message;
        }
        
     }
