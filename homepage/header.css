@@ -1,0 +1,67 @@
+.main-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    font-size: 24px; 
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .logo span {
+    color: blue;  
+  }
+  
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  
+  nav a {
+    color: #282828;
+    text-decoration: none;
+    padding: 10px 15px;
+    text-transform: uppercase; 
+  }
+  
+  nav a:hover {
+    color: #333;
+  }
+  
+  .btn-signup {
+    background: blue;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 4px; 
+  }
+  
+  .btn-signup:hover {
+    background: #0047b3;
+  }
+  
+  .login {
+    color: blue; 
+  }
+  
+  .dropdown {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 10px 0;
+    display: none;
+  }
+  
+  .dropdown a {
+    display: block; 
+    padding: 10px 20px;
+  }
+  
+  /* Show dropdown on hover */
+  nav li:hover .dropdown {
+    display: block;
+  }
