@@ -1,21 +1,30 @@
 const {getUsers, userLogIn} = loadWrapperFunctions(supabase);
 document.getElementById("loginForm").addEventListener("submit", function(event){
     event.preventDefault();
-    validateLoginForm();
-    console.log(window.globalVar);
+    if (validateLoginForm()) {
+        console.log('Login successful');
+    }
 });
 function validateLoginForm() {
-    var username = document.getElementById('loginForm').elements['username'];
+    var fname = document.getElementById('loginForm').elements['fname'];
+    var lname = document.getElementById('loginForm').elements['lname'];
     var password = document.getElementById('loginForm').elements['password'];
+    var remember = document.getElementById('loginForm').elements['remember'];
     var isValid = true;
     var errorMessage = document.getElementById('loginError');
     
-    username.style.borderColor = '';
+    fname.style.borderColor = '';
+    lname.style.borderColor = '';
     password.style.borderColor = '';
     errorMessage.textContent = '';
 
-    if (username.value.trim() === '') {
-        username.style.borderColor = 'red';
+    if (fname.value.trim() === '') {
+        fname.style.borderColor = 'red';
+        errorMessage.textContent = 'Username is required';
+        isValid = false;
+    }
+    if (lname.value.trim() === '') {
+        lname.style.borderColor = 'red';
         errorMessage.textContent = 'Username is required';
         isValid = false;
     }
@@ -25,7 +34,29 @@ function validateLoginForm() {
         errorMessage.textContent = 'Your password must include at least 8 charachters';
         isValid = false;
     }
-    if(isValid)
-        userLogIn();
+    if (isValid && remember.checked) {
+        localStorage.setItem('fname', fname.value);
+        localStorage.setItem('lname', lname.value);
+        localStorage.setItem('password', password.value);
+    } else {
+        localStorage.removeItem('fname');
+        localStorage.removeItem('lname');
+        localStorage.removeItem('password');
+    }
+
     return isValid;
 }
+
+function loadStoredCredentials() {
+    var fname = localStorage.getItem('fname');
+    var lname = localStorage.getItem('lname');
+    var password = localStorage.getItem('password');
+    if (fname && lname && password) {
+        document.getElementById('loginForm').elements['fname'].value = fname;
+        document.getElementById('loginForm').elements['lname'].value = lname;
+        document.getElementById('loginForm').elements['password'].value = password;
+        document.getElementById('loginForm').elements['remember'].checked = true;
+    }
+}
+
+window.onload = loadStoredCredentials;

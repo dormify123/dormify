@@ -12,12 +12,6 @@ function loadWrapperFunctions(supabase)
       });
     console.log(_supabase);
 
-
-
-
-
-
-
     //everything related to handling user login sessions with cookies
     function retrieveSession(){
       var data = getSessionFromCookie("sessionCookie");
@@ -91,30 +85,25 @@ function loadWrapperFunctions(supabase)
         logout_anchor.addEventListener("mouseout", function (event){
           logout_anchor.style.textDecoration = "none";
         });
-        document.getElementById("header").innerHTML = "";
-        document.getElementById("header").appendChild(status);
+        var headerElement = document.getElementById("header");
+        if (headerElement) {
+            headerElement.innerHTML = "";
+        }
+                document.getElementById("header").appendChild(status);
         document.getElementById("header").appendChild(logout_anchor);
       }
       else {
         status.textContent = "Currently not logged in";
-        document.getElementById("header").innerHTML = "";
-        document.getElementById("header").appendChild(status);
+        var headerElement = document.getElementById("header");
+        if (headerElement) {
+            headerElement.innerHTML = "";
+        }
+                document.getElementById("header").appendChild(status);
       }
     }
     
-
-
-
     //session retrival on page-load, checks if there is a session active and loads user information if there is
     retrieveSession();
-
-
-
-
-
-
-
-
 
     //database auth event handlers
     const { data } = _supabase.auth.onAuthStateChange((event, session) => {
@@ -135,10 +124,6 @@ function loadWrapperFunctions(supabase)
       // handle user updated event
       }
     });
-
-
-
-
 
 
     //user signup-signin-logout functions
