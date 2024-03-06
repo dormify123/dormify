@@ -1,10 +1,12 @@
 import './App.css';
 import Login from './pages/login/login';
+import Header from './modules/header/header'
 
 function App() {
   return (
     <div className="App">
-        <Login />
+        <Header/>
+        <Login/>
     </div>
   );
 }

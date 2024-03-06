@@ -5,6 +5,7 @@ const Login = () => {
 
   return (
     <>
+    <div className="login-body">
       <form id="loginForm" autoComplete="on">
         <div className="container">
           <h1>Login</h1>
@@ -43,6 +44,7 @@ const Login = () => {
           <div id="loginError" className="error-message"></div>
         </div>
       </form>
+      </div>
     </>
   );
 };

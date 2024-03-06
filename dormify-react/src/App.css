@@ -1,16 +1,7 @@
-body{
-    background-image: url('assets/background.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    font-family: Arial;
-    height: 100vh;
-    margin: 20;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 h1{
     text-align: center;
     color: #4248D1;
+}
+body{
+    font-family: sans-serif;
 }
