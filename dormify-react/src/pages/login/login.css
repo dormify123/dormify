@@ -7,10 +7,9 @@
   align-items: center;
 }
 .login-body{
-  /* background-image: url('../../assets/background.jpg');
+  background-image: url('../../assets/background.jpg');
   background-size:cover;
   background-repeat: no-repeat;
-  background-blend-mode: multiply; */
   background-color: #F8FCFF;
   font-family: Arial;
   height: 100vh;
@@ -22,7 +21,7 @@
 .container {
   max-width: 400px;
   max-height: fit-content;
-  background-color: #f0f2f2;
+  background-color: white;
   border-radius: 10px;
   margin: auto;
   padding: 25px;
