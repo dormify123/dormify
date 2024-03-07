@@ -5,3 +5,10 @@ h1{
 body{
     font-family: sans-serif;
 }
+.logo{
+    background-image: url('./assets/Logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width:150px;
+    height:40px;
+}
