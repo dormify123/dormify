@@ -9,20 +9,12 @@ const Login = () => {
       <form id="loginForm" autoComplete="on">
         <div className="container">
           <h1>Login</h1>
-          <label htmlFor="fname">First name</label>
+          <label htmlFor="enail">Email</label>
           <input
             type="text"
-            placeholder="Type your first name..."
-            id="fname"
-            name="fname"
-            required
-          />
-          <label htmlFor="lname">Last name</label>
-          <input
-            type="text"
-            placeholder="Type your last name..."
-            id="lname"
-            name="lname"
+            placeholder="Type your email"
+            id="email"
+            name="email"
             required
           />
           <label htmlFor="password">Password</label>
