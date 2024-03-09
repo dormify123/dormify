@@ -1,8 +1,12 @@
 import React from "react";
 import './login.css';
-
+import BtnSmall from '../../modules/buttons/small/btn-small';
+import { useNavigate } from "react-router-dom";
 const Login = () => {
-
+  const nav = useNavigate();
+  function onSignupClick() {
+    nav('/signup');
+  }
   return (
     <>
     <div className="login-body">
@@ -29,10 +33,9 @@ const Login = () => {
           <button type="submit" className="loginbtn">
             Login
           </button>
-          <p>
-            Don't have an account?{" "}
-            <a>Sign up here</a>.
-          </p>
+          <div style={{display:'flex', alignItems:'center'}}>
+              <p>Dont have an account?</p><BtnSmall onClick={onSignupClick}>Signup</BtnSmall>
+          </div>
           <div id="loginError" className="error-message"></div>
         </div>
       </form>
