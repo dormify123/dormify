@@ -4,7 +4,8 @@ import BtnSmall from '../../modules/buttons/small/btn-small';
 import { useNavigate } from "react-router-dom";
 import {userLogin} from '../../utils/services/auth';
 const Login = () => {
-  function form_submit() {
+  function form_submit(e) {
+    e.preventDefault();
     userLogin(document.getElementById("user_email").value, document.getElementById("user_password").value);
   };
   const nav = useNavigate();

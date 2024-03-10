@@ -1,8 +1,9 @@
 import './header.css'
 import BtnSmall from '../buttons/small/btn-small'
 import {useNavigate} from 'react-router-dom';
-import {getSession} from '../../utils/supabase';
-const Header_ = () => {
+const Header_ = (session_) => {
+    const {session} = session_;
+    console.log(session);
     const nav = useNavigate();
     function onSignupClick(event){
         nav('signup');
@@ -21,8 +22,8 @@ const Header_ = () => {
                 <div className = "box-invisible" style = {{width:'670px'}}></div>
                 <BtnSmall className = "box" withBackground={false} withBorder = {false} textColor={"black"} onClick = {onHomeClick}>Home</BtnSmall>
                 <BtnSmall className ="box" withBackground={false} withBorder={false} textColor={"black"}> Services </BtnSmall>
-                <BtnSmall className ="box" withBackground={false} withBorder={false} onClick = {onLoginClick}>Login</BtnSmall>
-                <BtnSmall withBackground={true} withBorder={true} onClick={onSignupClick} className ="box">Signup</BtnSmall>
+                {session? <p>sign out</p>:<BtnSmall className ="box" withBackground={false} withBorder={false} onClick = {onLoginClick}>Login</BtnSmall>}
+                {session? <p>{session.user.email}</p>:<BtnSmall id = "signup_btn" withBackground={true} withBorder={true} onClick={onSignupClick} className ="box">Signup</BtnSmall>}
             </div>
         </>
     );

@@ -3,7 +3,7 @@ const Home = () => {
     return(
         <>
             <div className="placeholder">
-                <h className ="placeholder-text">Home page</h>
+                <h1 className ="placeholder-text">Home page</h1>
             </div>
         </>
     );
