@@ -4,7 +4,7 @@ import Signup from './pages/signup/signup';
 import Header from './modules/header/header'
 import Home from './pages/home/home';
 import { BrowserRouter, Routes, Route} from "react-router-dom";
-
+import {supabase} from './utils/supabase';
 
 function App() {
   return (

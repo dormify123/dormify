@@ -1,6 +1,7 @@
 import './header.css'
 import BtnSmall from '../buttons/small/btn-small'
 import {useNavigate} from 'react-router-dom';
+import {getSession} from '../../utils/supabase';
 const Header_ = () => {
     const nav = useNavigate();
     function onSignupClick(event){
@@ -14,7 +15,7 @@ const Header_ = () => {
     }
     return (
         <>
-            <div class="header-container-row">
+            <div className="header-container-row">
                 <div className ="box-invisible" style = {{width:'40px'}}></div>
                 <div className = "box logo"></div>
                 <div className = "box-invisible" style = {{width:'670px'}}></div>
