@@ -8,9 +8,13 @@ async function userSignUp(_email, _password) {
     if(!error){
         console.log("Sign up succesful");
         console.log(await supabase.auth.getSession());
+        return null;
     }
     else 
-        console.log("Sign up failed: " + error.message); 
+    {
+        console.log("Sign up failed: " + error.message);
+        return error;
+    } 
 };
 async function userLogin(_email, _password) {
     const {data, error} = await supabase.auth.signInWithPassword({
@@ -20,8 +24,23 @@ async function userLogin(_email, _password) {
     if(!error){
         console.log("Sign in succesful");
         console.log(await supabase.auth.getSession());
+        return null;
     }
     else 
+    {
         console.log("Sign in failed: " + error.message);
+        return error;
+    }
 };
-export {userSignUp, userLogin};
+async function userSignOut(){
+    const {error} = await supabase.auth.signOut();
+    if(!error){
+        console.log("Sign out succesful");
+    }
+    else 
+    {
+        console.log("sign out failed: " + error.message);
+        return error;
+    }
+}
+export {userSignUp, userLogin, userSignOut};

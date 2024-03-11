@@ -4,11 +4,16 @@ import BtnSmall from '../../modules/buttons/small/btn-small';
 import { useNavigate } from "react-router-dom";
 import {userLogin} from '../../utils/services/auth';
 const Login = () => {
-  function form_submit(e) {
-    e.preventDefault();
-    userLogin(document.getElementById("user_email").value, document.getElementById("user_password").value);
-  };
   const nav = useNavigate();
+  async function form_submit(e) {
+    e.preventDefault();
+    let error = await userLogin(document.getElementById("user_email").value, document.getElementById("user_password").value);
+    if(error){
+      document.getElementById("loginError").textContent = error.message;
+    }
+    else 
+      nav('/');
+  };
   function onSignupClick() {
     nav('/signup');
   }
@@ -41,7 +46,7 @@ const Login = () => {
           <div style={{display:'flex', alignItems:'center'}}>
               <p>Dont have an account?</p><BtnSmall onClick={onSignupClick}>Signup</BtnSmall>
           </div>
-          <div id="loginError" className="error-message"></div>
+          <p id="loginError" className="error-message"></p>
         </div>
       </form>
       </div>
