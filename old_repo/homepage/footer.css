@@ -1,0 +1,47 @@
+
+body {
+    background-color: #4F81BD;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+    text-align: center;
+    padding-bottom: 50px;
+  }
+  
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  
+ 
+  .logo {
+    font-size: 36px;
+    font-weight: bold;
+    color: #000000; 
+  }
+  
+  .logo i {
+    font-style: normal; 
+    color: #1B3E98;
+  }
+  
+
+  .nav-links {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  
+  .nav-links li {
+    margin-left: 20px;
+  }
+  
+  .nav-links a {
+    color: #000000; 
+    text-decoration: none;
+  }
