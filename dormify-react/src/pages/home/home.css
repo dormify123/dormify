@@ -1,89 +1,89 @@
-.placeholder{
-    display:flex;
-    width:100%;
-    height:512px;
-    align-items: center;
-    justify-content: center;
+.placeholder {
+  display: flex;
+  width: 100%;
+  height: 512px;
+  align-items: center;
+  justify-content: center;
 }
-.placeholder-text{
-    font-size: 125px;
+.placeholder-text {
+  font-size: 125px;
 }
 
-/* * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  } */
-  
-  body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-  }
-  
-  .home-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 100vh;
-  }
-  
-  .hero-content {
-    flex: 1;
-    text-align: left;
-  }
-  
-  h1 {
-    font-size: 48px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  h2 {
-    font-size: 36px;
-    margin-bottom: 20px;
-  }
-  
-  .blue-dark {
-    color: #3f71cc;
-  }
-  
-  p {
-    font-size: 18px;
-    margin-bottom: 30px;
-  }
-  
-  .btn {
-    display: inline-block;
-    background-color: #3f71cc;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-  }
-  
-  .hero-image {
-    flex: 1;
-    max-width: 40%;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: auto;
-  }
-   
-  .img1{
-    width: 538px;
-    height: 485px;
-  }
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100vh;
+}
 
-  .shadowed {
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-  }
-  
-  .grey-text {
-    color: grey;
-  }
-  
+.hero-content {
+  text-align: left;
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.shadowed {
+  color: black;
+  text-align: left;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.blue-dark {
+  color: #3f71cc;
+  text-shadow: black 1px;
+  text-align: left;
+}
+
+p {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.btn-register {
+  display: inline-block;
+  background-color: #3f71cc;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  border: none;
+}
+
+.btn-register:hover {
+  background-color: #2e5ab1;
+}
+
+.hero-image {
+  flex: 1;
+  max-width: 40%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+}
+
+.img1 {
+  width: 538px;
+  height: 485px;
+}
+
+.grey-text {
+  color: grey;
+}
+.title-negative-margin {
+  margin-top: -10px;
+  text-align: left;
+}
