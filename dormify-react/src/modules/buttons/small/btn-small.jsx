@@ -9,13 +9,11 @@ const BtnSmall = ({children, withBackground, withBorder, textColor,onClick}) => 
     if(withBorder)
         button_class += " with-border";
     function handleMouseEnter(e){
-        console.log("mouseEnter");
         if (buttonRef.current) {
             buttonRef.current.classList.add("hover");
         }
     }
     function handleMouseLeave(e){
-        console.log("mouseLeave");
         if (buttonRef.current) {
             buttonRef.current.classList.remove("hover");
         }

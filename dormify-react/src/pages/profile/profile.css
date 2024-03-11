@@ -7,9 +7,8 @@ body {
 }
 
 .card {
-    position: relative;
     display: flex;
-    word-wrap: break-word;
+    flex-direction: row;
     background-color: #fff;
     background-clip: border-box;
     border-radius: .5rem;
@@ -19,4 +18,24 @@ body {
 
 .user-pic{
     width: 150px;
+    height:auto;
+}
+.user-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.box{
+    margin:10px;
+}
+
+.profile-attribute{
+    color: #4248D1;
+    font-weight: 600;
+}
+
+.profile-attribute-value{
+    font-weight: 400;
+    color:#1a202c;
 }

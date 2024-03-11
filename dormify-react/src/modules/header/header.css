@@ -8,14 +8,26 @@
     padding-top: 10px;
 }
 .box{
-    margin:14px;
+    margin:5px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 }
-
-.btn-small{
-    margin:10px;
-    padding:2px;
+.user-pic-header{
+    width: 40px;
+    height: 40px;
+}
+.user-pic-button{
+    background: #F8FCFF;
+    border: none;
+    overflow: hidden;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.user-pic-button:hover{
+    cursor: pointer;
+    background: #d9dcdf;
 }

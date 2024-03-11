@@ -16,5 +16,5 @@
 }
 .hover{
     cursor: pointer;
-    filter: grayscale(50%);
+    opacity: 0.7;
 }

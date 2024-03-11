@@ -1,83 +1,31 @@
 import './signup.css'
+import {validateSignupForm,loadStoredCredentials} from './signup-validate.jsx'
+import {userSignUp} from '../../utils/services/auth';
 import BtnSmall from '../../modules/buttons/small/btn-small'
 import {useNavigate} from 'react-router-dom';
-function validateSignupForm() {
-    var fname = document.getElementById('signupForm').elements['fname'];
-    var lname = document.getElementById('signupForm').elements['lname'];
-    var password = document.getElementById('signupForm').elements['password'];
-    var confirmPassword = document.getElementById('signupForm').elements['confirm_password'];
-    var isValid = true;
-    var errorMessage = document.getElementById('signupError');
 
-    fname.style.borderColor = '';
-    lname.style.borderColor = '';
-    password.style.borderColor = '';
-    confirmPassword.style.borderColor = '';
-    errorMessage.textContent = '';
-
-    if (fname.value.trim() === '' || password.value.trim() === '' || confirmPassword.value.trim() === '') {
-        errorMessage.textContent = 'Missing fields';
-        if (fname.value.trim() === '') {
-            fname.style.borderColor = 'red';
-        }
-        if (password.value.trim() === '') {
-            password.style.borderColor = 'red';
-        }
-        if (confirmPassword.value.trim() === '') {
-            confirmPassword.style.borderColor = 'red';
-        }
-        isValid = false;
-    }
-    if (lname.value.trim() === '' || password.value.trim() === '' || confirmPassword.value.trim() === '') {
-        errorMessage.textContent = 'Missing fields';
-        if (lname.value.trim() === '') {
-            lname.style.borderColor = 'red';
-        }
-        if (password.value.trim() === '') {
-            password.style.borderColor = 'red';
-        }
-        if (confirmPassword.value.trim() === '') {
-            confirmPassword.style.borderColor = 'red';
-        }
-        isValid = false;
-    }
-
-    if (password.value.length < 8) {
-        password.style.borderColor = 'red';
-        errorMessage.textContent = 'Your password must include at least 8 charachters';
-        isValid = false;
-    }
-
-    if (password.value !== confirmPassword.value) {
-        password.style.borderColor = 'red';
-        confirmPassword.style.borderColor = 'red';
-        errorMessage.textContent = 'Passwords do not match';
-        isValid = false;
-    }
-    return isValid;
-}
-
-function loadStoredCredentials() {
-    var fname = localStorage.getItem('fname');
-    var lname = localStorage.getItem('lname');
-    var password = localStorage.getItem('password');
-    if (fname && lname && password) {
-        document.getElementById('loginForm').elements['fname'].value = fname;
-        document.getElementById('loginForm').elements['lname'].value = lname;
-        document.getElementById('loginForm').elements['password'].value = password;
-        document.getElementById('loginForm').elements['remember'].checked = true;
-    }
-}
 const Signup = () =>{
     const nav = useNavigate();
+    async function form_submit(event){
+        event.preventDefault();
+        let isValid = validateSignupForm();
+        if(isValid){
+            let error = await userSignUp(document.getElementById("user_email").value, document.getElementById("user_password").value, document.getElementById("fname").value, document.getElementById("lname").value,document.getElementById("roomnumber").value);
+            console.log(error);
+            if(error)
+                document.getElementById("signupError").textContent = error.message;
+            else 
+                nav('/');
+        }
+    };
     function onLoginClick() {
         nav('/login');
     }
     return(
         <>
         <div className="background-img">
-            <form id="signuphtmlForm" className="signup-body" autoComplete='on' onSubmit={validateSignupForm}>
-                <div className="signup-container">
+            <form id="signupForm" className="signup-body" autoComplete='on'>
+                <div className="container">
                     <h1>Sign Up</h1>
                     <label htmlFor="email">User information</label>
                     <input type="email" id = "user_email" placeholder="Type your email..." name="email" required/>
@@ -94,11 +42,11 @@ const Signup = () =>{
                     <label htmlFor="password">Confirm Password</label>
                     <input type="password" placeholder="Type the same password again..." name="confirm_password" required/>
                     <input type="checkbox" name="remember"/> Remember password
-                    <button type="submit" className="signupbtn" >Sign Up</button>
+                    <button type="submit" className="signupbtn" onClick={form_submit} >Sign Up</button>
                     <div style={{display:'flex', alignItems:'center'}}>
                         <p>Already have an account? </p><BtnSmall onClick={onLoginClick}>Login here</BtnSmall>
                     </div>
-                    <div id="signupError" className="error-message"></div>
+                    <p id="signupError" className="error-message"></p>
                 </div>
             </form>
         </div>
