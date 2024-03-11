@@ -77,7 +77,7 @@ const Signup = () =>{
         <>
         <div className="background-img">
             <form id="signuphtmlForm" className="signup-body" autoComplete='on' onSubmit={validateSignupForm}>
-                <div className="container">
+                <div className="signup-container">
                     <h1>Sign Up</h1>
                     <label htmlFor="email">User information</label>
                     <input type="email" id = "user_email" placeholder="Type your email..." name="email" required/>

@@ -17,6 +17,8 @@ const Profile = () => {
             <div className="user-info">
               <h4>Dormify User</h4>
               <p className="status">Dorm Resident</p>
+              <p className="room-number">Room number: 123</p>
+              <p className="email">resident123@mail.aub.edu</p>
               <p className="location">AUB, Beirut, Lebanon</p>
             </div>
           </div>

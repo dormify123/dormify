@@ -12,3 +12,20 @@ body{
     width:150px;
     height:40px;
 }
+
+.user-pic-header{
+    width: 40px;
+    height: 40px;
+}
+.user-pic-button{
+    background: #F8FCFF;
+    border: none;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.user-pic-button:hover{
+    background: #d9dcdf;
+}
