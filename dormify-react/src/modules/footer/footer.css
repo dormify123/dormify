@@ -3,21 +3,22 @@
     font-family: Arial, sans-serif;
     color: #ffffff;
     text-align: center;
-    padding-bottom: 80px;
-    max-height: 60px;
-  }
+    /* padding-bottom: 80px; */
+    height: 60px;
+  } 
   
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    /* padding: 20px; */
   }
 
   .logo {
     font-size: 36px;
     font-weight: bold;
     color: #000000; 
+    margin:10px ;
   }
   
   .logo i {
@@ -28,10 +29,10 @@
   .nav-links {
     display: flex;
     list-style-type: none;
-    margin: 0;
+    margin: 10px;
     padding: 0;
     justify-content: center;
-    margin-top: 30px;
+    /* margin-top: 30px; */
   }
   
   .nav-links li {

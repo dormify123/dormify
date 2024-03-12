@@ -87,3 +87,38 @@ p {
   margin-top: -10px;
   text-align: left;
 }
+
+h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.additional-options {
+  background-color: white;
+}
+
+.photo-buttons {
+  margin:0px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.serviceImage {
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.serviceDetails {
+  text-align: center;
+  font-size: smaller;
+}
+
+.tiny-font {
+  font-size: smaller;
+  text-align: center;
+}

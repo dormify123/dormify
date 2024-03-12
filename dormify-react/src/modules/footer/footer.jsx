@@ -6,8 +6,7 @@ const Footer = () => {
     <>
       <div className="footer-body">
         <header class="header">
-          <div class="logo">{/* Dorm<i>i</i>fy */}</div>
-        </header>
+          <div class="logo"></div>
         <nav>
           <ul class="nav-links">
             <li>
@@ -18,6 +17,7 @@ const Footer = () => {
             </li>
           </ul>
         </nav>
+        </header>
       </div>
     </>
   );

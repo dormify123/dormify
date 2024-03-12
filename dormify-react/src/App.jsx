@@ -30,7 +30,7 @@ function App() {
         <BrowserRouter>
         <Header session = {session}/>
           <Routes>
-            <Route path ="/" element ={<Home/>}></Route>
+            <Route path ="/" element ={<Home session = {session}/>}></Route>
             <Route path ="login" element ={<Login/>}></Route>
             <Route path ="signup" element = {<Signup/>}></Route>
             <Route path ="profile" element = {<Profile session={session}/>}></Route>
