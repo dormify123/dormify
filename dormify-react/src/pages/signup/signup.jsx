@@ -41,7 +41,7 @@ const Signup = () =>{
                     <input id ="user_password" type="password" placeholder="Type your password..." name="password" required/>
                     <label htmlFor="password">Confirm Password</label>
                     <input type="password" placeholder="Type the same password again..." name="confirm_password" required/>
-                    <input type="checkbox" name="remember"/> Remember password
+                    {/* <input type="checkbox" name="remember"/> Remember password */}
                     <button type="submit" className="signupbtn" onClick={form_submit} >Sign Up</button>
                     <div style={{display:'flex', alignItems:'center'}}>
                         <p>Already have an account? </p><p className = "routing-button" onClick={onLoginClick}>Login here</p>
