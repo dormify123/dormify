@@ -79,3 +79,13 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     margin-top: 10px;
     text-align: center;
 }
+
+.routing-button{
+    margin-left:2px;
+    color: lightgray;
+    text-decoration: underline;
+}
+.routing-button:hover{
+    opacity:0.8;
+    cursor: pointer;
+}

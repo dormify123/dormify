@@ -44,7 +44,7 @@ const Login = () => {
             Login
           </button>
           <div style={{display:'flex', alignItems:'center'}}>
-              <p>Dont have an account?</p><BtnSmall onClick={onSignupClick}>Signup</BtnSmall>
+              <p>Dont have an account </p> <p className="routing-button" onClick={onSignupClick}>Sign up</p>
           </div>
           <p id="loginError" className="error-message"></p>
         </div>

@@ -44,7 +44,7 @@ const Signup = () =>{
                     <input type="checkbox" name="remember"/> Remember password
                     <button type="submit" className="signupbtn" onClick={form_submit} >Sign Up</button>
                     <div style={{display:'flex', alignItems:'center'}}>
-                        <p>Already have an account? </p><BtnSmall onClick={onLoginClick}>Login here</BtnSmall>
+                        <p>Already have an account? </p><p className = "routing-button" onClick={onLoginClick}>Login here</p>
                     </div>
                     <p id="signupError" className="error-message"></p>
                 </div>
