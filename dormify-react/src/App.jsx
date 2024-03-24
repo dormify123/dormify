@@ -4,6 +4,7 @@ import Signup from './pages/signup/signup';
 import Header from './modules/header/header'
 import Home from './pages/home/home';
 import Profile from './pages/profile/profile';
+import Services from './pages/services/services';
 import Footer from './modules/footer/footer';
 import { BrowserRouter, Routes, Route} from "react-router-dom";
 import {useState, useEffect} from 'react';
@@ -34,6 +35,7 @@ function App() {
             <Route path ="login" element ={<Login/>}></Route>
             <Route path ="signup" element = {<Signup/>}></Route>
             <Route path ="profile" element = {<Profile session={session}/>}></Route>
+            <Route path ="services" element = {<Services session = {session}></Services>}></Route>
           </Routes>
           <Footer/>
         </BrowserRouter>

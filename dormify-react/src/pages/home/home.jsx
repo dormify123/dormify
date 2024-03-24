@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
+import BtnMedium from '../../modules/buttons/medium/btn-medium.jsx'
 import dormImg from "../../assets/Transparent-pic.png";
 import laundryLogo from "../../assets/Laundry-pic.png";
 import cleaningLogo from "../../assets/Cleaning-pic.png";
@@ -11,7 +12,10 @@ const Home = (session_) => {
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
-    navigate("/signup");
+    navigate("signup");
+  };
+  function onGetStartedClick(e) {
+    navigate("services");
   };
 
   return (
@@ -30,7 +34,7 @@ const Home = (session_) => {
             <button className="btn-register" onClick={handleRegisterClick}>
             Register
             </button>
-          </>):<p></p>
+          </>):<BtnMedium withBackground={true} withBorder={true} onClick={onGetStartedClick}>Get Started</BtnMedium>
           }
         </div>
         <div className="hero-image">
