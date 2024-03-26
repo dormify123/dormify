@@ -11,11 +11,30 @@ async function createUser(user_session, first_name, last_name, room_number){
         console.log("something went wrong inserting a user: " + error.message);
     return error;
 };
-async function createDorm(user_session, rooms, location, email)
-{
-    
+async function getUserDorm(user_session){
+    let {id} = user_session;
+    let role = await getUserRole(user_session);
+    let drm_id;
+    if(role === "resident")
+    {
+        let {error,data} = await supabase.from('resident').select('dorm_id').eq('user_id', id);
+        drm_id = data[0].dorm_id;
+    }
+    else if(role === "dormowner")
+    {
+        let dormowner_query = await supabase.from('dormowner').select('id').eq('user_id', id);
+        console.log(dormowner_query);
+        let dormowner_id = dormowner_query.data[0].id;
+        let {error,data} = await supabase.from('dorm').select('*').eq('dormowner_id', dormowner_id);
+        if(error)
+            console.log(error.message);
+        console.log(data);
+        if(data.length != 0)
+            drm_id = data[0].id;
+    }
+    return drm_id;
 }
-async function getUserInformation(user_session)
+async function getUserProfileInformation(user_session)
 {
     let {id} = user_session;
     console.log(id);
@@ -76,5 +95,27 @@ async function getUserRole(user_session)
     else if(data[0].staff_id)
         return "staff";
 }
+async function createDorm(name_, email_, location_, room_num_, user_session){
+    let {id} = user_session;
+    let dormowner_query = await supabase.from('dormowner').select('id').eq('user_id',id);
+    console.log(dormowner_query);
+    let dorm_id = await supabase.from('sequence').select('*').eq('table_name',"dorm");
+    let {error} = await supabase.from('dorm').insert({id: dorm_id.data[0].value, name:name_, email:email_, location:location_, rooms:room_num_, dormowner_id: dormowner_query.data[0].id});
+    if(error)
+    {
+        console.log("something went wrong inserting a dorm: " + error.message);
+        return error;
+    }
+    dorm_id +=1;
+    let error_sequence = await supabase.from('sequence').update({valye: dorm_id}).eq('table_name', "dorm");
+}
+async function joinDorm(session, dorm_id_)
+{
+    let {id} = session;
+    let resident_query = await supabase.from('resident').select('*').eq('user_id',id);
+    let resident_id = resident_query.data[0].id;
+    let {error} = await supabase.from('resident').update({dorm_id: dorm_id_}).eq('id', resident_id);
+    return error;
+}
 
-export{createUser, getUserInformation, registerUserRole, getUserRole};
+export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm};
