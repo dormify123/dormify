@@ -99,18 +99,10 @@ h2 {
 }
 
 .photo-buttons {
-  margin:0px;
+  margin: 0px;
   display: flex;
   justify-content: space-between;
   padding: 10px;
-}
-
-.serviceImage {
-  width: 100px;
-  height: 100px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .serviceDetails {
@@ -121,4 +113,29 @@ h2 {
 .tiny-font {
   font-size: smaller;
   text-align: center;
+}
+
+.serviceButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.photo-button1,
+.photo-button2,
+.photo-button3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+}
+
+.serviceImage {
+  width: 100px;
+  height: 100px;
+}
+
+.serviceDetails {
+  font-size: smaller;
 }

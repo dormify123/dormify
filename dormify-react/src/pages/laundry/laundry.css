@@ -1,0 +1,56 @@
+.laundry-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.calendar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.laundry-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.laundry-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-slot-label {
+  margin-bottom: 10px;
+}
+
+.time-slot-select {
+  margin-bottom: 20px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.submit-button {
+  background-color: #3f71cc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.submit-button:hover {
+  background-color: #2e5ab1;
+}
+
+.calendar-container {
+  margin-bottom: 20px;
+}
+
+.reserved-slot {
+  color: #aaa;
+}
