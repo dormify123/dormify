@@ -1,5 +1,6 @@
 import "./profile.css";
 import profileIcon from '../../assets/profile-icon.png';
+import BtnMedium from '../../modules/buttons/medium/btn-medium'
 import { getUserProfileInformation, getUserRole, getUserDorm } from "../../utils/services/users";
 import {useState, useEffect} from 'react';
 
@@ -12,7 +13,8 @@ const Profile = (session_) => {
   let dorm;
   useEffect(() => {
     const fetchUserProfile = async() => {
-      const {data, status, statusText} = await getUserProfileInformation(user);
+      const data = await getUserProfileInformation(user);
+      console.log("data is: " + data);
       setUserData(data);
     }
     const fetchUserRole = async() => {
@@ -21,52 +23,105 @@ const Profile = (session_) => {
     }
     const fetchUserDorm = async() => {
       console.log(user);
-      const drm_id = await getUserDorm(user);
-      if(drm_id) {
-      setUserDorm(drm_id);
+      const drm = await getUserDorm(user);
+      if(drm) {
+      setUserDorm(drm);
       }
     }
     fetchUserProfile();
     fetchUserRole();
     fetchUserDorm();
   },[]);
-  console.log(userData);
+  async function uploadProfilePicture(picture){
+
+  }
+  function handleFullNameChange(e) {
+    const { name, value } = e.target;
+    setUserData(prevState => ({
+      ...prevState,
+      full_name: value
+    }
+    ));
+  }
+  function handleRoomNumberChange(e) {
+    const { name, value } = e.target; 
+    setUserData(prevState => ({
+      ...prevState,
+      room_number: value
+    }
+    ));
+  };
+  function handleEmailChange(e) {
+    const { name, value } = e.target;
+    setUserData(prevState => ({
+      ...prevState,
+      email: value
+    }
+    ));
+  }
+
+  function handleLocationChange(e){
+    const { name, value } = e.target;
+    setUserData(prevState => ({
+      ...prevState,
+      location: value
+    }
+    ));
+  }
+  
   return (
     <div className="profile-container">
       <div className="profilecard">
-        <img
-          src={profileIcon}
-          alt="Admin"
-          className="user-pic"
-        />
+        <div className="profile-pic">
+          <img
+            src={profileIcon}
+            alt="Admin"
+            className="user-pic"
+          />
+          <BtnMedium withBackground={true} withBorder={true} textColor = {"white"} onClick={() => uploadProfilePicture()}>
+            Upload picture
+          </BtnMedium>
+        </div>
         <div className="profile-user-info">
           {userData ? (
             <>
               <div className="profile-box">
                 <p className="profile-attribute">Full name:</p>
-                <p className="profile-attribute-value">{`${userData[0].first_name} ${userData[0].last_name}`}</p>
+                <input onChange={handleFullNameChange} className="profile-input" value = {userData.full_name} ></input>
               </div>
               <div className="profile-box">
                 <p className="profile-attribute">Room number:</p>
-                <p className="profile-attribute-value">{userData[0].room_num}</p>
+                <input onChange={handleRoomNumberChange} className="profile-input" value = {userData.room_num}></input>
               </div>
               <div className="profile-box">
                 <p className="profile-attribute">Email:</p>
-                <p className="profile-attribute-value">{userData[0].email}</p>
+                <input onChange={handleEmailChange} className="profile-input" value = {userData.email}></input>
               </div>
               <div className="profile-box">
                 <p className="profile-attribute">Location:</p>
-                <p className="profile-attribute-value">AUB, Hamra, Beirut.</p>
+                {userDorm?<>
+                    <input className="profile-input" onChange={handleLocationChange} value = {userDorm.location}></input>
+                </>:<>
+                  <input className="profile-input" onChange={handleLocationChange} value = {userData.location}></input>
+                </>}
               </div>
             </>
           ) : (
             <div>No user information found</div>
           )}
         </div>
-        <div className = "dorm-interactions-box">
-            <p id="user_role" class="profile-attribute">Current role: {userRole?userRole:<>No user role</>}</p>
-            <br></br>
-            <p id="user_dorm" class="profile-attribute">Current dorm_id: {userDorm?userDorm:<>Not belonging to any dorm</>}</p>
+        <div className = "dorm-box">
+          <div className="dorm-information-box">
+            <p id="user_role" class="dorm-information-text">Current role: {userRole?userRole:<>No user role</>}</p>
+            <p id="user_dorm" class="dorm-information-text">Current dorm_id: {userDorm?userDorm.id:<>Not belonging to any dorm</>}</p>
+          </div>
+            <div className="dorm-interactions-box">{userDorm?<>
+              <BtnMedium withBorder={true} withBackground={true} backgroundColor={"red"}>Leave Dorm</BtnMedium>
+            </>:<>
+            <BtnMedium withBorder={true} withBackground={true}>Join a Dorm</BtnMedium>
+            </>}
+            <BtnMedium withBorder={true} withBackground={true} backgroundColor={"lightgray"} hoverDisabled={true}>Save Changes</BtnMedium>
+            </div>
         </div>
       </div>
     </div>

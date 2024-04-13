@@ -18,7 +18,7 @@ async function getUserDorm(user_session){
     if(role === "resident")
     {
         let {error,data} = await supabase.from('resident').select('dorm_id').eq('user_id', id);
-        drm_id = data[0].dorm_id;
+        return data[0];
     }
     else if(role === "dormowner")
     {
@@ -28,17 +28,21 @@ async function getUserDorm(user_session){
         let {error,data} = await supabase.from('dorm').select('*').eq('dormowner_id', dormowner_id);
         if(error)
             console.log(error.message);
-        console.log(data);
-        if(data.length != 0)
-            drm_id = data[0].id;
+        else 
+            return data[0];
     }
-    return drm_id;
 }
 async function getUserProfileInformation(user_session)
 {
     let {id} = user_session;
     console.log(id);
-    return await supabase.from("users").select('*').eq('id', id); 
+    let {error, data}  = await supabase.from('users').select('*').eq('id', id);
+    console.log("CHECK HERE: ");
+    console.log(data[0]);
+    if(error)
+        console.log("unexecpted error: " + error.message);
+    else 
+        return data[0];
 }
 async function registerUserRole(user_session, role)
 {
@@ -117,5 +121,7 @@ async function joinDorm(session, dorm_id_)
     let {error} = await supabase.from('resident').update({dorm_id: dorm_id_}).eq('id', resident_id);
     return error;
 }
+async function uploadUserPfp(){
 
-export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm};
+}
+export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm, uploadUserPfp};
