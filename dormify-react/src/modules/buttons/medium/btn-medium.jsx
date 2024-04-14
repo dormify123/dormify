@@ -1,6 +1,6 @@
 import './btn-medium.css';
 import React, { useRef } from 'react';
-const BtnMedium = ({children, withBackground, withBorder, textColor,onClick, backgroundColor, hoverDisabled}) => {
+const BtnMedium = ({children, withBackground, withBorder, textColor,onClick, backgroundColor, disabled}) => {
     let button_class = "btn-medium"
     const buttonRef = useRef(null);
 
@@ -8,13 +8,15 @@ const BtnMedium = ({children, withBackground, withBorder, textColor,onClick, bac
         button_class += " with-background";
     if(withBorder)
         button_class += " with-border";
+    if(disabled)
+        backgroundColor = "lightgray";
     function handleMouseEnter(e){
-        if (buttonRef.current && !hoverDisabled) {
+        if (buttonRef.current && !disabled) {
             buttonRef.current.classList.add("hover");
         }
     }
     function handleMouseLeave(e){
-        if (buttonRef.current && !hoverDisabled) {
+        if (buttonRef.current && !disabled) {
             buttonRef.current.classList.remove("hover");
         }
     }

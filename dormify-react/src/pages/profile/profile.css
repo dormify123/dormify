@@ -71,8 +71,7 @@
   }
   .dorm-information-box{
     display:flex;
-    flex-direction: row;
-    gap:10px;
+    flex-direction: column;
   }
   .dorm-interactions-box{
     display: flex;

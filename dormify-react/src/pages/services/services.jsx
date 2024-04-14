@@ -15,8 +15,10 @@ const Services = (session_) => {
             setUserRole(role);
         }
         const fetchUserDorm = async()=>{
-            const dorm_id = await getUserDorm(session.user);
-            setUserDorm(dorm_id);
+            const dorm_query = await getUserDorm(session.user);
+            console.log(dorm_query);
+            if(dorm_query)
+                setUserDorm(dorm_query.dorm_name);
         }
         fetchUserDorm();
         fetchUserRole();
@@ -94,8 +96,8 @@ const Services = (session_) => {
                                     </form>
                                     
                                     </>:<>
-                                    <h className ="message-text-small"> Enter dorm id to join</h>
-                                    <input id ="dorm_id" type ="number" className="dorm-creation-input" style={{maxWidth:"50px"}}></input>
+                                    <h className ="message-text-small"> Enter dorm name to join</h>
+                                    <input id ="dorm_id" type ="text" className="dorm-creation-input" style={{maxWidth:"80px"}}></input>
                                     <BtnMedium onClick={onJoinDormClick} withBackground={true} withBorder={true}>Enter dorm</BtnMedium>
                                     </>}
                                 </div>

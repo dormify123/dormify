@@ -1,24 +1,24 @@
 import { supabase } from '../supabase';
+import {Buffer} from 'buffer';
 
-async function createUser(user_session, first_name, last_name, room_number){
-    console.log("room number is: ");
-    console.log(room_number);
+async function createUser(user_session, first_name, last_name, location){
     let {id, email} = user_session;
     console.log(id + " " + email +" " + first_name + " " + last_name);
-    const {error} = await supabase.from('users').insert({id:id, email:email, first_name:first_name, last_name:last_name, room_num:room_number});
-    console.log(error);
-    if(error)
-        console.log("something went wrong inserting a user: " + error.message);
-    return error;
+    const {error: userError} = await supabase.from('users').insert({id:id, email:email, full_name: first_name + " " + last_name, location:location});
+    const {error: profilePictureError} = await supabase.from('profile_pic').insert({user_id:id});
+    return (userError, profilePictureError);
 };
 async function getUserDorm(user_session){
     let {id} = user_session;
     let role = await getUserRole(user_session);
-    let drm_id;
+    let drm_name;
     if(role === "resident")
     {
-        let {error,data} = await supabase.from('resident').select('dorm_id').eq('user_id', id);
-        return data[0];
+        let {error,data} = await supabase.from('resident').select('*').eq('user_id', id);
+        if(error)
+            console.log(error.message)
+        else 
+            return data[0];
     }
     else if(role === "dormowner")
     {
@@ -48,6 +48,7 @@ async function registerUserRole(user_session, role)
 {
     let {id} = user_session;
     let existing_role = await getUserRole(user_session);
+    console.log(existing_role);
     let error_table;
     let error_roles;
     let sequence_error;
@@ -56,7 +57,7 @@ async function registerUserRole(user_session, role)
         if(role === "resident"){
             let {error,data} = await supabase.from('sequence').select('value').eq('table_name','resident');
             let res_id = data[0].value;
-            error_table = await supabase.from('resident').insert({id: res_id,dorm_id:null, room_num:null,user_id:id});
+            error_table = await supabase.from('resident').insert({id: res_id,dorm_name:null, room_num:null,user_id:id});
             error_roles = await supabase.from('roles').insert({user_id:id, resident_id:res_id});
             res_id +=1
             sequence_error = await supabase.from('sequence').update({value: res_id}).eq('table_name', 'resident');
@@ -101,27 +102,45 @@ async function getUserRole(user_session)
 }
 async function createDorm(name_, email_, location_, room_num_, user_session){
     let {id} = user_session;
-    let dormowner_query = await supabase.from('dormowner').select('id').eq('user_id',id);
+    let dormowner_query = await supabase.from('dormowner').select('*').eq('user_id',id);
     console.log(dormowner_query);
-    let dorm_id = await supabase.from('sequence').select('*').eq('table_name',"dorm");
-    let {error} = await supabase.from('dorm').insert({id: dorm_id.data[0].value, name:name_, email:email_, location:location_, rooms:room_num_, dormowner_id: dormowner_query.data[0].id});
+    let {error} = await supabase.from('dorm').insert({dorm_name:name_, email:email_, location:location_, rooms:room_num_, dormowner_id: dormowner_query.data[0].id});
     if(error)
     {
         console.log("something went wrong inserting a dorm: " + error.message);
         return error;
     }
-    dorm_id +=1;
-    let error_sequence = await supabase.from('sequence').update({valye: dorm_id}).eq('table_name', "dorm");
 }
-async function joinDorm(session, dorm_id_)
+async function joinDorm(session, dorm_name)
 {
     let {id} = session;
     let resident_query = await supabase.from('resident').select('*').eq('user_id',id);
     let resident_id = resident_query.data[0].id;
-    let {error} = await supabase.from('resident').update({dorm_id: dorm_id_}).eq('id', resident_id);
+    let {error} = await supabase.from('resident').update({dorm_name: dorm_name}).eq('id', resident_id);
     return error;
 }
-async function uploadUserPfp(){
-
+async function changeUserInformation(session, full_name, email, location, image)
+{
+    const bufferData = Buffer.from(image.split(',')[1], 'base64');
+    const hexData = bufferData.toString('hex');
+    const byteaData = '\\x' + hexData;
+    let {id} = session;
+    let {error: userError} = await supabase.from('users').update({full_name: full_name, email: email, location: location}).eq('id', id);
+    let {error: picError} = await supabase.from('profile_pic').update({image_data: byteaData}).eq('user_id', id);
+    return {userError, picError};
 }
-export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm, uploadUserPfp};
+async function getUserProfilePicture(session){
+    console.log(session);
+    let {id} = session;
+    let {error,data} = await supabase.from('profile_pic').select('image_data').eq('user_id', id);
+    if(error)
+        console.log(error);
+    else if(data.length > 0) 
+        return data[0].image_data;
+}
+async function leaveDorm(session)
+{
+    let {id} = session;
+    let {error: dormQueryError, data} = await supabase.from('resident').update({dorm_name : null}).eq('user_id', id);
+}
+export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm, changeUserInformation, getUserProfilePicture, leaveDorm};
