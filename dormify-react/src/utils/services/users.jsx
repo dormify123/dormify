@@ -34,6 +34,32 @@ async function getUserDorm(user_session){
     }
     return drm_id;
 }
+async function getUserRoomNumber(userId) {
+    if (!userId) {
+      console.error('Invalid or missing userId');
+      return null;
+    }
+    
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('room_num')
+        .eq('id', userId)
+        .single();  
+    
+      if (error) {
+        console.error('Error fetching room number:', error.message);
+        return null;
+      }
+    
+      return data ? data.room_num : null;
+    } catch (error) {
+      console.error('Exception fetching room number:', error.message);
+      return null;
+    }
+  }
+  
+  
 async function getUserProfileInformation(user_session)
 {
     let {id} = user_session;
@@ -82,19 +108,41 @@ async function registerUserRole(user_session, role)
 
     return {error_table, error_roles, sequence_error};
 }
-async function getUserRole(user_session)
-{
-    let {id} = user_session;
-    let {error,data} = await supabase.from('roles').select('*').eq('user_id', id);
-    if(data.length === 0)
+async function getUserRole(user_session) {
+    if (!user_session || !user_session.id) {
+        console.error("Invalid user session data", user_session);
         return null;
-    if(data[0].dormowner_id)
-        return "dormowner";
-    else if(data[0].resident_id)
-        return "resident";
-    else if(data[0].staff_id)
-        return "staff";
+    }
+
+    let { id } = user_session;
+    try {
+        const { data, error } = await supabase.from('roles').select('*').eq('user_id', id);
+
+        if (error) {
+            console.error('Error fetching user role:', error.message);
+            return null;
+        }
+
+        if (!data || data.length === 0) {
+            console.log('No roles found for user:', id);
+            return null;
+        }
+
+        if (data[0].dormowner_id) {
+            return "dormowner";
+        } else if (data[0].resident_id) {
+            return "resident";
+        } else if (data[0].staff_id) {
+            return "staff";
+        }
+
+        return null;  
+    } catch (error) {
+        console.error('Exception fetching user role:', error.message);
+        return null;
+    }
 }
+
 async function createDorm(name_, email_, location_, room_num_, user_session){
     let {id} = user_session;
     let dormowner_query = await supabase.from('dormowner').select('id').eq('user_id',id);
@@ -118,4 +166,4 @@ async function joinDorm(session, dorm_id_)
     return error;
 }
 
-export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm};
+export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, getUserRoomNumber, createDorm, joinDorm};

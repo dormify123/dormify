@@ -16,6 +16,9 @@ const Header_ = (session_) => {
     function onHomeClick(event){
         nav('/');
     }
+    function onServicesClick(event){
+        nav('services');
+    }
     async function onSignoutClick(event){
         let error = await userSignOut();
         if(error)
@@ -32,7 +35,7 @@ const Header_ = (session_) => {
                 <div className = "box logo"></div>
                 <div className = "box-invisible" style = {{width:'690px'}}></div>
                 <BtnSmall className = "box" withBackground={false} withBorder = {false} textColor={"black"} onClick = {onHomeClick}>Home</BtnSmall>
-                <BtnSmall className ="box" withBackground={false} withBorder={false} textColor={"black"}>Services</BtnSmall>
+                <BtnSmall className ="box" withBackground={false} withBorder={false} textColor={"black"} onClick={onServicesClick}>Services</BtnSmall>
                 <div class="box-invisible" style = {{width:'20px'}}></div>
                 {session?
                 (<>
