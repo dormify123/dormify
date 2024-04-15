@@ -14,14 +14,6 @@
   margin-bottom: 50px;
 }
 
-.btn-medium {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 10px 20px;
-  text-align: center;
-}
 
 .services-box {
   display: flex;

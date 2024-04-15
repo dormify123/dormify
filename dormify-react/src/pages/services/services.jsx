@@ -10,39 +10,41 @@ import {
   joinDorm,
 } from "../../utils/services/users";
 import { useNavigate } from "react-router-dom";
-
-const Services = ({ session }) => {
-  const { user } = session;
-  const nav = useNavigate();
-  const [userRole, setUserRole] = useState(null);
-  const [userDorm, setUserDorm] = useState(null);
-  const [roomNum, setRoomNum] = useState(null);
-
-  useEffect(() => {
-    if (!user || !user.id) {
-      console.error("User data is incomplete or unavailable.");
-      return;
+const Services = (session_) => {
+    let {session} = session_;
+    let {user} = session;
+    const nav = useNavigate();
+    const [userRole, setUserRole] = useState(null);
+    const [userDorm, setUserDorm] = useState(0);
+    const [roomNum, setRoomNum] = useState(-1);
+    useEffect(() =>{
+        const fetchUserRole = async()=>{
+            const role = await getUserRole(session.user);
+            setUserRole(role);
+        }
+        const fetchUserDorm = async()=>{
+            const dorm_query = await getUserDorm(session.user);
+            console.log(dorm_query);
+            if(dorm_query)
+                setUserDorm(dorm_query.dorm_name);
+        }
+        const fetchUserRommNum = async ()=>{
+            const room_query = await getUserRoomNumber(session.user);
+            console.log(room_query);
+            if(room_query)
+                setRoomNum(room_query.room_number);
+        }
+        fetchUserDorm();
+        fetchUserRole();
+        fetchUserRommNum();
+    },[]);
+    async function onRegisterRoleClick(role) {
+        console.log(role);
+        let message = await registerUserRole(user, role);
+        setUserRole(role);
+        console.log(message);
+        nav('/services');
     }
-    const fetchData = async () => {
-      const role = await getUserRole(user);
-      const dormId = await getUserDorm(user);
-      const roomNumber = await getUserRoomNumber(user.id);
-      setUserRole(role);
-      setUserDorm(dormId);
-      setRoomNum(roomNumber);
-    };
-    fetchData();
-  }, [user]);
-
-  const onRegisterRoleClick = async (role) => {
-    const message = await registerUserRole(user, role);
-    if (!message.error) {
-      setUserRole(role);
-      nav("/services");
-    } else {
-      console.error(message.error);
-    }
-  };
 
   const onCreateDormClick = async () => {
     const dorm_name = document.getElementById("dorm_name").value;
@@ -64,8 +66,8 @@ const Services = ({ session }) => {
   };
 
   const onJoinDormClick = async () => {
-    const dorm_id = document.getElementById("dorm_id").value;
-    const error = await joinDorm(user, dorm_id);
+    const dorm_name = document.getElementById("dorm_name").value;
+    const error = await joinDorm(user, dorm_name);
     if (!error) {
       nav("/profile");
     } else {
@@ -170,10 +172,10 @@ const Services = ({ session }) => {
                 </form>
               ) : (
                 <>
-                  <h className="message-text-small">Enter dorm ID to join</h>
+                  <h className="message-text-small">Enter dorm name to join</h>
                   <input
-                    id="dorm_id"
-                    type="number"
+                    id="dorm_name"
+                    type="text"
                     className="dorm-creation-input"
                     style={{ maxWidth: "50px" }}
                   />
@@ -197,7 +199,7 @@ const Services = ({ session }) => {
                 You are registered as a {userRole}
               </h>
               <h className="message-text-small">
-                You are part of dorm {userDorm}, room {roomNum}.
+                You are part of dorm {userDorm}, {roomNum != - 1?<>room number {roomNum}</>:<>You are not assigned a room yet</>}.
               </h>
             </div>
             <div className="services-box">
@@ -206,14 +208,14 @@ const Services = ({ session }) => {
                 withBorder={true}
                 onClick={() => nav("/laundry")}
               >
-                Laundry Schedule
+                Laundry 
               </BtnMedium>
               <BtnMedium
                 withBackground={true}
                 withBorder={true}
                 onClick={() => nav("/cleaning")}
               >
-                Cleaning Schedule
+                Cleaning 
               </BtnMedium>
               <BtnMedium
                 withBackground={true}
@@ -226,8 +228,6 @@ const Services = ({ session }) => {
           </div>
         </div>
       )}
-    </>
-  );
-};
-
+    </>);
+}
 export default Services;

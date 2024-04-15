@@ -29,21 +29,57 @@
   }
   
   .profile-box {
-    margin-bottom: 10px;
-    max-height: 50px;
+    display:flex;
+    flex-direction:column;
+    height:auto;
     width: auto;
   }
   
-  .profile-attribute {
-    color: #4248D1;
-    font-weight: 600;
-    display: inline-block; /* Display as inline-block for same line appearance */
+.profile-input {
+    width: 90%;
+    padding: 10px 1rem;
+    border-radius: 10px;
+    outline: 2px solid #4248d1;
+    border: 0;
+    transition: 0.25s;
+    background-color: #e2e2e2;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   }
   
-  .profile-attribute-value {
-    font-weight: 400;
-    color: #1a202c;
-    display: inline-block; /* Display as inline-block for same line appearance */
-    margin-left: 5px; /* Adjust margin for spacing between title and value */
+  .profile-input:focus {
+    outline-offset: 5px;
+    background-color: #fff;
+  }
+  
+  .profile-input:focus::placeholder {
+    color: transparent;
+  }
+  
+  .profile-attribute{
+    color:black;
+    font-weight: bold;
+  }
+  .profile-pic{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .dorm-box{
+    display:flex;
+    flex-direction:column;
+  }
+  .dorm-information-box{
+    display:flex;
+    flex-direction: column;
+  }
+  .dorm-interactions-box{
+    display: flex;
+    flex-direction: row;
+    gap:5px;
+  }
+  .dorm-information-text{
+    color:blue;
+    font-weight: bold;
   }
   

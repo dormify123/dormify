@@ -10,7 +10,7 @@ const Signup = () =>{
         event.preventDefault();
         let isValid = validateSignupForm();
         if(isValid){
-            let error = await userSignUp(document.getElementById("user_email").value, document.getElementById("user_password").value, document.getElementById("fname").value, document.getElementById("lname").value,document.getElementById("roomnumber").value);
+            let error = await userSignUp(document.getElementById("user_email").value, document.getElementById("user_password").value, document.getElementById("fname").value, document.getElementById("lname").value, document.getElementById("user_location").value);
             console.log(error);
             if(error)
                 document.getElementById("signupError").textContent = error.message;
@@ -27,7 +27,7 @@ const Signup = () =>{
             <form id="signupForm" className="signup-body" autoComplete='on'>
                 <div className="container">
                     <h1>Sign Up</h1>
-                    <label htmlFor="email">User information</label>
+                    <label htmlFor="email">Email </label>
                     <input type="email" id = "user_email" placeholder="Type your email..." name="email" required/>
                     <div id="user_name_input">
                         <label htmlFor="fname" style={{width:'48%',marginRight:'10px'}}>First Name</label>
@@ -35,8 +35,8 @@ const Signup = () =>{
                         <input type="text" placeholder="First name" style={{width:'40%', marginRight:'10px'}} id="fname" name="fname" required/>
                         <input type="text" style={{width:'40%'}} placeholder="Last name" id="lname" name="lname" required/>
                     </div>
-                    <label htmlFor="roomnumber">Room number</label>
-                    <input type="number" placeholder="Type your room number..." id="roomnumber" name="roomnumber" required/>
+                    <label htmlFor="location">Location</label>
+                    <input type = "text" id = "user_location" placeholder='type your location' required></input>
                     <label htmlFor="password">Password</label>
                     <input id ="user_password" type="password" placeholder="Type your password..." name="password" required/>
                     <label htmlFor="password">Confirm Password</label>
