@@ -113,39 +113,23 @@ async function registerUserRole(user_session, role)
 
     return {error_table, error_roles, sequence_error};
 }
-async function getUserRole(user_session) {
-    if (!user_session || !user_session.id) {
-        console.error("Invalid user session data", user_session);
-        return null;
+async function getUserRole(user_session)
+{
+    let {id} = user_session;
+    let {error,data} = await supabase.from('roles').select('*').eq('user_id', id);
+    if(error)
+    {
+        console.log(error.message);
+        return;
     }
-
-    let { id } = user_session;
-    try {
-        const { data, error } = await supabase.from('roles').select('*').eq('user_id', id);
-
-        if (error) {
-            console.error('Error fetching user role:', error.message);
-            return null;
-        }
-
-        if (!data || data.length === 0) {
-            console.log('No roles found for user:', id);
-            return null;
-        }
-
-        if (data[0].dormowner_id) {
-            return "dormowner";
-        } else if (data[0].resident_id) {
-            return "resident";
-        } else if (data[0].staff_id) {
-            return "staff";
-        }
-
-        return null;  
-    } catch (error) {
-        console.error('Exception fetching user role:', error.message);
+    if(data.length === 0)
         return null;
-    }
+    if(data[0].dormowner_id)
+        return "dormowner";
+    else if(data[0].resident_id)
+        return "resident";
+    else if(data[0].staff_id)
+        return "staff";
 }
 
 async function createDorm(name_, email_, location_, room_num_, user_session){
@@ -191,4 +175,29 @@ async function leaveDorm(session)
     let {id} = session;
     let {error: dormQueryError, data} = await supabase.from('resident').update({dorm_name : null}).eq('user_id', id);
 }
-export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm, changeUserInformation, getUserProfilePicture, leaveDorm , getUserRoomNumber};
+async function getResidents(session)
+{
+    if(await getUserRole(session) === "dormowner")
+    {
+        let {id} = session;
+        let {data: dormOwnerQuery, error: errorDormOwner} = await supabase.from('roles').select('dormowner_id').eq('user_id',id);
+        let {data: dormQuery, error: errorDorm} = await supabase.from('dorm').select('dorm_name').eq('dormowner_id', dormOwnerQuery[0].dormowner_id);
+        const { data, error } = await supabase.from('resident').select(`dorm_name,users (full_name)`).eq("dorm_name", dormQuery[0].dorm_name);
+        if(error)
+            console.log(error.message);
+        return data;
+    }
+}
+async function checkinLateUser(session, date_){
+    let {id} = session;
+    let{data, error : errorSequence1} = await supabase.from('sequence').select('value').eq('table_name', 'late_checkins');
+    let {error: errorLateCheckins} = await supabase.from('late_checkins').insert({user_id: id, date:date_.toISOString(), id: data[0].value});
+    if(errorSequence1)
+        console.log(errorSequence1.message);
+    if(errorLateCheckins)
+        console.log(errorLateCheckins.message);
+    let {error: errorSequence2} = await supabase.from('sequence').update({value:data[0].value + 1}).eq('table_name', 'late_checkins');
+    if(errorSequence2)
+        console.log(errorSequence2.message)
+}
+export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm, changeUserInformation, getUserProfilePicture, leaveDorm , getUserRoomNumber, getResidents, checkinLateUser};
