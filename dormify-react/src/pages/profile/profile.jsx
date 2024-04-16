@@ -51,7 +51,7 @@ const Profile = (session_) => {
     const fetchUserDorm = async() => {
       console.log(user);
       const drm = await getUserDorm(user);
-      if(drm.dorm_name != null) {
+      if(drm != null) {
       setUserDorm(drm);
       }
     }

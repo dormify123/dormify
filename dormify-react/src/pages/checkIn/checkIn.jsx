@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {checkinLateUser, getUserProfileInformation} from '../../utils/services/users';
 import "./checkIn.css";
-import { useUser } from './UserContext';
 
 const CheckIn = (session_) => {
   const [checkInTime, setCheckInTime] = useState('');

@@ -25,7 +25,7 @@ async function getUserDorm(user_session){
         let dormowner_query = await supabase.from('dormowner').select('id').eq('user_id', id);
         console.log(dormowner_query);
         let dormowner_id = dormowner_query.data[0].id;
-        let {error,data} = await supabase.from('dorm').select('*').eq('dormowner_id', dormowner_id);
+        let {error,data} = await supabase.from('dorm').select('dorm_name').eq('dormowner_id', dormowner_id);
         if(error)
             console.log(error.message);
         else 
@@ -134,14 +134,21 @@ async function getUserRole(user_session)
 
 async function createDorm(name_, email_, location_, room_num_, user_session){
     let {id} = user_session;
-    let dormowner_query = await supabase.from('dormowner').select('*').eq('user_id',id);
-    console.log(dormowner_query);
-    let {error} = await supabase.from('dorm').insert({dorm_name:name_, email:email_, location:location_, rooms:room_num_, dormowner_id: dormowner_query.data[0].id});
-    if(error)
+    let {data: dormOwnerQuery, error: dormOwnerError} = await supabase.from('dormowner').select('*').eq('user_id',id);
+    if(dormOwnerError)
+        console.log(dormOwnerError);
+    let {error: dormError} = await supabase.from('dorm').insert({dorm_name:name_, email:email_, location:location_, rooms:room_num_, dormowner_id: dormOwnerQuery[0].id});
+    if(dormError)
     {
-        console.log("something went wrong inserting a dorm: " + error.message);
-        return error;
+        console.log("something went wrong inserting a dorm: " + dormError.message);
+        return dormError;
     }
+    let {data: sequenceQuery, error: sequenceError} = await supabase.from('sequence').select('value').eq('table_name', "calendar");
+    let calendar_id = sequenceQuery[0].value;
+    const dataToInsert = [{id: calendar_id, name:"laundry", dorm_name:name_}, {id:calendar_id +1, name:"cleaning", dorm_name:name_}];
+    let {error: calendarError} = await supabase.from('calendar').insert(dataToInsert);
+    if(calendarError)
+        console.log(calendarError.message);
 }
 async function joinDorm(session, dorm_name)
 {
@@ -173,7 +180,10 @@ async function getUserProfilePicture(session){
 async function leaveDorm(session)
 {
     let {id} = session;
-    let {error: dormQueryError, data} = await supabase.from('resident').update({dorm_name : null}).eq('user_id', id);
+    let {error: dormQueryError} = await supabase.from('resident').update({dorm_name : "null"}).eq('user_id', id);
+    let {data} = await supabase.from('roles').select('dormowner_id').eq('user_id',id)
+    if(await getUserRole(session) === "dormowner")
+        console.log(await supabase.from('dorm').delete().eq("dormowner_id", data[0].dormowner_id));
 }
 async function getResidents(session)
 {

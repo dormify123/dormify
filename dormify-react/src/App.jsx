@@ -12,7 +12,6 @@ import Footer from './modules/footer/footer';
 import { BrowserRouter, Routes, Route} from "react-router-dom";
 import {useState, useEffect} from 'react';
 import {supabase} from './utils/supabase';
-import { UserProvider } from './pages/checkIn/UserContext';
 
 
 function App() {
@@ -33,7 +32,6 @@ function App() {
   }, []);
   return (
     <div className="App">
-          <UserProvider>
         <BrowserRouter>
         <Header session = {session}/>
           <Routes>
@@ -48,7 +46,6 @@ function App() {
           </Routes>
           <Footer/>
         </BrowserRouter>
-        </UserProvider>
     </div>
   );
 }
