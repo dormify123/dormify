@@ -99,3 +99,16 @@ input:focus::placeholder {
   opacity:0.8;
   cursor: pointer;
 }
+
+.forgot-password {
+  color: lightgray; 
+  text-decoration: underline;
+  font-size: 12px; 
+  cursor: pointer;
+  text-align: center; 
+  margin-top: 10px;
+}
+
+.forgot-password:hover {
+  opacity: 0.8;
+}
