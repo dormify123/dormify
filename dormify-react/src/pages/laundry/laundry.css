@@ -6,10 +6,10 @@
 }
 
 .calendar-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .laundry-title {
@@ -53,4 +53,27 @@
 
 .reserved-slot {
   color: #aaa;
+}
+
+.confirm-reservation-laundry {
+  background-color: #3f71cc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+
+.cancel-reservation-laundry {
+  background-color: #3f71cc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
 }
