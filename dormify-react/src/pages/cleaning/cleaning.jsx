@@ -11,8 +11,19 @@ const CleaningSchedule = () => {
   const [tempEvent, setTempEvent] = useState(null);
 
   const handleDateSelect = (selectInfo) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(selectInfo.startStr);
+
+    if (selectedDate < today) {
+      alert("You cannot reserve a slot in the past.");
+      selectInfo.view.calendar.unselect();
+      return;
+    }
+
     if (selectedSlots.length >= 2) {
       alert("You can only reserve two slots.");
+      selectInfo.view.calendar.unselect();
       return;
     }
 
@@ -20,7 +31,9 @@ const CleaningSchedule = () => {
       id: createEventId(),
       title: "Reserved",
       start: selectInfo.startStr,
-      end: selectInfo.endStr,
+      end: new Date(selectInfo.startStr).setMinutes(
+        new Date(selectInfo.startStr).getMinutes() + 15
+      ),
       allDay: selectInfo.allDay,
     };
 
@@ -57,46 +70,58 @@ const CleaningSchedule = () => {
     return String(events.length + 1);
   }
 
+  function formatDateTime(dateTime) {
+    const date = new Date(dateTime);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(date.getDate()).padStart(2, "0")}, ${String(
+      date.getHours()
+    ).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+  }
+
   return (
     <div className="cleaning-container">
       <h1 className="cleaning-title">Cleaning Schedule</h1>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
-        slotMinTime={"09:00:00"} 
-        slotMaxTime={"14:00:00"}
+        slotMinTime="09:00:00"
+        slotMaxTime="14:00:00"
         selectable={true}
         selectMirror={true}
         dayMaxEvents={true}
         weekends={true}
+        allDaySlot={false}
         events={events}
         select={handleDateSelect}
         eventClick={handleEventClick}
-        eventContent={renderEventContent}
-        slotDuration={"00:15:00"}
-        slotLabelInterval={"00:15:00"}
+        slotDuration="00:15:00"
+        slotLabelInterval="00:15:00"
         eventColor="#378006"
       />
       {tempEvent && (
         <div className="confirmation-box">
           <p>
-            You have selected slot from {tempEvent.start} to {tempEvent.end}
+            You have selected slot from {formatDateTime(tempEvent.start)} to{" "}
+            {formatDateTime(tempEvent.end)}
           </p>
-          <button onClick={confirmReservation}>Confirm Reservation</button>
-          <button onClick={() => setTempEvent(null)}>Cancel</button>
+          <button
+            className="confirm-reservation-cleaning"
+            onClick={confirmReservation}
+          >
+            Confirm Reservation
+          </button>
+          <button
+            className="cancel-reservation-cleaning"
+            onClick={() => setTempEvent(null)}
+          >
+            Cancel
+          </button>
         </div>
       )}
     </div>
   );
 };
-
-function renderEventContent(eventInfo) {
-  return (
-    <>
-      <b>{eventInfo.timeText}</b>
-      <i>{" " + eventInfo.event.title}</i>
-    </>
-  );
-}
 
 export default CleaningSchedule;

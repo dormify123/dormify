@@ -1,106 +1,125 @@
 import React, { useState } from "react";
-import Calendar from "react-calendar";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
 import "../laundry/laundry.css";
-import "react-calendar/dist/Calendar.css";
-
-const timeSlots = [
-  "6:00-6:30 AM",
-  "6:30-7:00 AM",
-  "7:00-7:30 AM",
-  "7:30-8:00 AM",
-  "8:00-8:30 AM",
-  "8:30-9:00 AM",
-  "9:00-9:30 AM",
-  "9:30-10:00 AM",
-  "10:00-10:30 AM",
-  "10:30-11:00 AM",
-  "11:00-11:30 AM",
-  "11:30-12:00 PM",
-  "12:00-12:30 PM",
-  "12:30-1:00 PM",
-  "1:00-1:30 PM",
-  "1:30-2:00 PM",
-  "2:00-2:30 PM",
-  "2:30-3:00 PM",
-  "3:00-3:30 PM",
-  "3:30-4:00 PM",
-  "4:00-4:30 PM",
-  "4:30-5:00 PM",
-  "5:00-5:30 PM",
-  "5:30-6:00 PM",
-  "6:00-6:30 PM",
-  "6:30-7:00 PM",
-  "7:00-7:30 PM",
-  "7:30-8:00 PM",
-  "8:00-8:30 PM",
-  "8:30-9:00 PM",
-  "9:00-9:30 PM",
-  "9:30-10:00 PM",
-  "10:00-10:30 PM",
-  "10:30-11:00 PM",
-  "11:00-11:30 PM",
-  "11:30-12:00 AM",
-];
 
 const LaundrySchedule = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedSlot, setSelectedSlot] = useState("");
-  const [reservedSlots, setReservedSlots] = useState({});
+  const [events, setEvents] = useState([]);
+  const [selectedSlots, setSelectedSlots] = useState([]);
+  const [tempEvent, setTempEvent] = useState(null);
 
-  const handleDayClick = (value) => {
-    setSelectedDate(value);
+  const handleDateSelect = (selectInfo) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(selectInfo.startStr);
+
+    if (selectedDate < today) {
+      alert("You cannot reserve a slot in the past.");
+      selectInfo.view.calendar.unselect();
+      return;
+    }
+
+    if (selectedSlots.length >= 2) {
+      alert("You can only reserve two slots.");
+      selectInfo.view.calendar.unselect();
+      return;
+    }
+
+    const event = {
+      id: createEventId(),
+      title: "Reserved",
+      start: selectInfo.startStr,
+      end: new Date(selectInfo.startStr).setMinutes(
+        new Date(selectInfo.startStr).getMinutes() + 30
+      ),
+      allDay: selectInfo.allDay,
+    };
+
+    setTempEvent(event);
   };
 
-  const handleSlotChange = (event) => {
-    setSelectedSlot(event.target.value);
+  const confirmReservation = () => {
+    if (tempEvent) {
+      setEvents([...events, tempEvent]);
+      setSelectedSlots([...selectedSlots, tempEvent]);
+      setTempEvent(null);
+    }
   };
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    const date = selectedDate.toDateString();
-    setReservedSlots({
-      ...reservedSlots,
-      [date]: [...(reservedSlots[date] || []), selectedSlot],
-    });
+  const handleEventClick = (clickInfo) => {
+    if (
+      window.confirm(
+        `Are you sure you want to remove the slot: '${clickInfo.event.title}'`
+      )
+    ) {
+      const remainingEvents = events.filter(
+        (event) => event.id !== clickInfo.event.id
+      );
+      setEvents(remainingEvents);
+
+      const updatedSelectedSlots = selectedSlots.filter(
+        (slot) => slot.id !== clickInfo.event.id
+      );
+      setSelectedSlots(updatedSelectedSlots);
+    }
   };
+
+  function createEventId() {
+    return String(events.length + 1);
+  }
+
+  function formatDateTime(dateTime) {
+    const date = new Date(dateTime);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(date.getDate()).padStart(2, "0")}, ${String(
+      date.getHours()
+    ).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+  }
 
   return (
     <div className="laundry-container">
       <h1 className="laundry-title">Laundry Schedule</h1>
-      <div className="calendar-container">
-        <Calendar onChange={handleDayClick} value={selectedDate} />
-      </div>
-      <form className="laundry-form" onSubmit={handleFormSubmit}>
-        <label htmlFor="time-slot" className="time-slot-label">
-          Select a time slot:
-        </label>
-        <select
-          id="time-slot"
-          className="time-slot-select"
-          onChange={handleSlotChange}
-          value={selectedSlot}
-        >
-          {timeSlots.map((slot) => (
-            <option
-              key={slot}
-              value={slot}
-              disabled={reservedSlots[selectedDate.toDateString()]?.includes(
-                slot
-              )}
-              className={
-                reservedSlots[selectedDate.toDateString()]?.includes(slot)
-                  ? "reserved-slot"
-                  : ""
-              }
-            >
-              {slot}
-            </option>
-          ))}
-        </select>
-        <button type="submit" className="submit-button">
-          Reserve Slot
-        </button>
-      </form>
+      <FullCalendar
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        initialView="timeGridWeek"
+        slotMinTime="06:00:00"
+        slotMaxTime="24:00:00"
+        selectable={true}
+        selectMirror={true}
+        dayMaxEvents={true}
+        weekends={true}
+        allDaySlot={false}
+        events={events}
+        select={handleDateSelect}
+        eventClick={handleEventClick}
+        slotDuration="00:30:00"
+        slotLabelInterval="00:30:00"
+        eventColor="#378006"
+      />
+      {tempEvent && (
+        <div className="confirmation-box">
+          <p>
+            You have selected slot from {formatDateTime(tempEvent.start)} to{" "}
+            {formatDateTime(tempEvent.end)}
+          </p>
+          <button
+            className="confirm-reservation-laundry"
+            onClick={confirmReservation}
+          >
+            Confirm Reservation
+          </button>
+          <button
+            className="cancel-reservation-laundry"
+            onClick={() => setTempEvent(null)}
+          >
+            Cancel
+          </button>
+        </div>
+      )}
     </div>
   );
 };

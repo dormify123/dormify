@@ -23,11 +23,11 @@
 }
 
 .time-slot-select {
-  width: 100%; /* Ensure it spans the full container width */
+  width: 100%;
   margin-bottom: 20px;
   padding: 10px;
   font-size: 16px;
-  cursor: pointer; /* Indicates this is selectable */
+  cursor: pointer;
 }
 
 .submit-button {
@@ -38,7 +38,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-top: 10px; /* Gives space between the dropdown and the button */
+  margin-top: 10px;
 }
 
 .submit-button:hover {
@@ -51,15 +51,17 @@
 
 .reserved-slot {
   color: #aaa;
-  background-color: #f2f2f2; 
+  background-color: #f2f2f2;
 }
 
-.fc-event .fc-event-title, .fc-event .fc-event-time {
-  white-space: normal; 
+.fc-event .fc-event-title,
+.fc-event .fc-event-time {
+  white-space: normal;
 }
 
-.fc .fc-timegrid-slot, .fc .fc-timegrid-slot-label {
-  height: 50px; 
+.fc .fc-timegrid-slot,
+.fc .fc-timegrid-slot-label {
+  height: 50px;
 }
 
 .fc-event {
@@ -68,11 +70,34 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 2px; 
+  padding: 2px;
   font-size: 10px;
   margin: auto;
 }
 
 .fc .fc-timegrid-slot {
-  min-height: 2em; /* Adjust minimum height as needed */
+  min-height: 2em;
+}
+
+.confirm-reservation-cleaning {
+  background-color: #3f71cc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+
+.cancel-reservation-cleaning {
+  background-color: #3f71cc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
 }
