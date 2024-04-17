@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./services.css";
 import BtnMedium from "../../modules/buttons/medium/btn-medium";
+import ResidentsTable from '../../modules/tables/residents/residentsTable';
 import {
   registerUserRole,
   getUserDorm,
@@ -8,6 +9,7 @@ import {
   getUserRoomNumber,
   createDorm,
   joinDorm,
+  getResidents
 } from "../../utils/services/users";
 import { useNavigate } from "react-router-dom";
 const Services = (session_) => {
@@ -17,6 +19,7 @@ const Services = (session_) => {
     const [userRole, setUserRole] = useState(null);
     const [userDorm, setUserDorm] = useState(0);
     const [roomNum, setRoomNum] = useState(-1);
+    const [residents, setResidents] = useState(null);
     useEffect(() =>{
         const fetchUserRole = async()=>{
             const role = await getUserRole(session.user);
@@ -34,9 +37,22 @@ const Services = (session_) => {
             if(room_query)
                 setRoomNum(room_query.room_number);
         }
-        fetchUserDorm();
-        fetchUserRole();
-        fetchUserRommNum();
+        const fetchResidents = async ()=>{
+          let inner_role = await getUserRole(user);
+          console.log(inner_role);
+          if(inner_role === "dormowner")
+          {
+            setResidents(await getResidents(user));
+          }
+        };
+        if(!userDorm)
+          fetchUserDorm();
+        if(!userRole)
+          fetchUserRole();
+        if(!roomNum)
+          fetchUserRommNum();
+        if(!residents)
+          fetchResidents();
     },[]);
     async function onRegisterRoleClick(role) {
         console.log(role);
@@ -74,7 +90,6 @@ const Services = (session_) => {
       console.error(error);
     }
   };
-
   return (
     <>
       <div className="message-top">
@@ -191,13 +206,10 @@ const Services = (session_) => {
             </div>
           </div>
         </div>
-      ) : (
-        <div className="wrapper">
+      ) : (userRole === "resident"?<>
+              <div className="wrapper">
           <div className="message-box">
-            <div className="services-message">
-              <h className="message-text-large">
-                You are registered as a {userRole}
-              </h>
+          <div className="services-message">
               <h className="message-text-small">
                 You are part of dorm {userDorm}, {roomNum != - 1?<>room number {roomNum}</>:<>You are not assigned a room yet</>}.
               </h>
@@ -226,8 +238,19 @@ const Services = (session_) => {
               </BtnMedium>
             </div>
           </div>
+        </div></>:<>
+        <div className="wrapper">
+        <div className="management-wrapper">
+          <div className="table-wrapper">
+                <ResidentsTable title = {"Residents"} custom_data = {residents} custom></ResidentsTable>
+          </div>
+          <div className="table-wrapper">
+                <ResidentsTable title = {"Check-ins"} custom_data = {residents}></ResidentsTable>
+          </div>
         </div>
-      )}
+        </div>
+
+        </>)}
     </>);
 }
 export default Services;

@@ -99,3 +99,24 @@
 .dorm-creation-input:focus::placeholder {
   color: transparent;
 }
+.dorm-management-row{
+  display:flex;
+  flex-direction:  column;
+  gap:5px;
+}
+.management-wrapper{
+  display:flex;
+  flex-direction:row;
+  width:100%;
+  justify-content: space-between;
+  gap:3px;
+}
+.table-wrapper{
+  display:flex;
+  flex-direction:column;
+  margin:100px;
+}
+.table-title{
+  font-weight:bold;
+  font-size:20px;
+}

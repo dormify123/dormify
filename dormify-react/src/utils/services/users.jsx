@@ -192,7 +192,7 @@ async function getResidents(session)
         let {id} = session;
         let {data: dormOwnerQuery, error: errorDormOwner} = await supabase.from('roles').select('dormowner_id').eq('user_id',id);
         let {data: dormQuery, error: errorDorm} = await supabase.from('dorm').select('dorm_name').eq('dormowner_id', dormOwnerQuery[0].dormowner_id);
-        const { data, error } = await supabase.from('resident').select(`dorm_name,users (full_name)`).eq("dorm_name", dormQuery[0].dorm_name);
+        const { data, error } = await supabase.from('resident').select(`users (full_name)`).eq("dorm_name", dormQuery[0].dorm_name);
         if(error)
             console.log(error.message);
         return data;
