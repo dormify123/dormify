@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
 import BtnMedium from "../../modules/buttons/medium/btn-medium.jsx";
@@ -6,29 +6,49 @@ import dormImg from "../../assets/Transparent-pic.png";
 import laundryLogo from "../../assets/Laundry-pic.png";
 import cleaningLogo from "../../assets/Cleaning-pic.png";
 import keyLogo from "../../assets/Key-pic.png";
+import Modal from "../../modules/modals/modals.jsx";
 
-const Home = (session_) => {
-  const { session } = session_;
+const Home = ({ session }) => {
   const navigate = useNavigate();
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleModalClose = () => setModalOpen(false);
+
+  const handleServiceAccess = (route) => {
+    if (session) {
+      navigate(route);
+    } else {
+      setModalOpen(true);
+    }
+  };
 
   const handleRegisterClick = () => {
     navigate("signup");
   };
+
   function onGetStartedClick(e) {
-    navigate("services");
+    handleServiceAccess("services");
   }
+
   function onLaundryClick(e) {
-    navigate("laundry");
+    handleServiceAccess("laundry");
   }
+
   function onCleaningClick(e) {
-    navigate("cleaning");
+    handleServiceAccess("cleaning");
   }
+
   function onCheckInClick(e) {
-    navigate("checkIn");
+    handleServiceAccess("checkIn");
   }
 
   return (
     <>
+      <Modal
+        isOpen={isModalOpen}
+        message="Please log in to access the services."
+        onClose={handleModalClose}
+      />
       <div className="home-container">
         <div className="hero-content">
           <h1 className="shadowed">Streamlining</h1>
@@ -39,11 +59,9 @@ const Home = (session_) => {
             Implementing Solutions for Efficient Dormitory Management
           </p>
           {!session ? (
-            <>
-              <button className="btn-register" onClick={handleRegisterClick}>
-                Register
-              </button>
-            </>
+            <button className="btn-register" onClick={handleRegisterClick}>
+              Register
+            </button>
           ) : (
             <BtnMedium
               withBackground={true}
@@ -61,30 +79,24 @@ const Home = (session_) => {
       <section className="additional-options">
         <h2>Maximize dorm life, Minimize the hassle</h2>
         <div className="photo-buttons">
-          <div className="photo-button1">
-            <button onClick={onLaundryClick} className="serviceButton">
-              <img className="serviceImage" src={laundryLogo} alt="Laundry" />
-            </button>
+          <button onClick={onLaundryClick} className="serviceButton">
+            <img className="serviceImage" src={laundryLogo} alt="Laundry" />
             <p className="serviceDetails">
               Reserve up to 2 slots per week here
             </p>
-          </div>
+          </button>
 
-          <div className="photo-button2">
-            <button onClick={onCleaningClick} className="serviceButton">
-              <img className="serviceImage" src={cleaningLogo} alt="Button 2" />
-            </button>
+          <button onClick={onCleaningClick} className="serviceButton">
+            <img className="serviceImage" src={cleaningLogo} alt="Cleaning" />
             <p className="serviceDetails">
-              Reserve cleaning service for you room
+              Reserve cleaning service for your room
             </p>
-          </div>
+          </button>
 
-          <div className="photo-button3">
-            <button onClick={onCheckInClick} className="serviceButton">
-              <img className="serviceImage" src={keyLogo} alt="Button 3" />
-            </button>
+          <button onClick={onCheckInClick} className="serviceButton">
+            <img className="serviceImage" src={keyLogo} alt="Check-in" />
             <p className="serviceDetails">Arrived late? Check-in here</p>
-          </div>
+          </button>
         </div>
       </section>
     </>

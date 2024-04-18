@@ -1,0 +1,18 @@
+.about-container {
+  height: 69vh;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.about-title {
+  margin-bottom: 20px;
+}
+
+.about-mission,
+.about-developers {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+}
