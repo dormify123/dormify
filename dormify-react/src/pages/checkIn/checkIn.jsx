@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import {checkinLateUser, getUserProfileInformation} from '../../utils/services/users';
 import "./checkIn.css";
-import { useUser } from './UserContext';
 
-const CheckIn = () => {
+const CheckIn = (session_) => {
   const [checkInTime, setCheckInTime] = useState('');
-  const { user } = useUser();
-
+  const [userName, setUserName] = useState("no user logged in");
+  const {session} = session_;
+  const {user} = session;
+  useEffect(()=>{
+    const fetchUserName = async() =>{
+      let user_profile = await getUserProfileInformation(user);
+      setUserName(user_profile.full_name);
+    }
+    fetchUserName();
+  });
   const handleCheckIn = () => {
-    const currentTime = new Date().toLocaleTimeString();
-    setCheckInTime(currentTime);
+    const date = new Date();
+    const localTimeString = date.toLocaleTimeString();
+    setCheckInTime(localTimeString);
+    checkinLateUser(user,date);
   };
 
   return (
@@ -19,7 +29,7 @@ const CheckIn = () => {
       </button>
       {checkInTime && (
         <div className="user-info-box">
-          <p>User: {user ? user.name : 'Angela Sobhieh'}</p>
+          <p>User: {userName}</p>
           <p>Check-in Time: {checkInTime}</p>
         </div>
       )}

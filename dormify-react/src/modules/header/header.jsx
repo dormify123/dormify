@@ -17,7 +17,10 @@ const Header_ = (session_) => {
         nav('/');
     }
     function onServicesClick(event){
-        nav('services');
+        if(session)
+            nav('services');
+        else 
+            nav('signup');
     }
     async function onSignoutClick(event){
         let error = await userSignOut();
@@ -33,10 +36,9 @@ const Header_ = (session_) => {
             <div className="header-container-row">
                 <div className ="box-invisible" style = {{width:'40px'}}></div>
                 <div className = "box logo"></div>
-                <div className = "box-invisible" style = {{width:'690px'}}></div>
-                <BtnSmall className = "box" withBackground={false} withBorder = {false} textColor={"black"} onClick = {onHomeClick}>Home</BtnSmall>
-                <BtnSmall className ="box" withBackground={false} withBorder={false} textColor={"black"} onClick={onServicesClick}>Services</BtnSmall>
-                <div class="box-invisible" style = {{width:'20px'}}></div>
+                <div className="user-control-row">
+                    <BtnSmall className = "" withBackground={false} withBorder = {false} textColor={"black"} onClick = {onHomeClick}>Home</BtnSmall>
+                    <BtnSmall className ="" withBackground={false} withBorder={false} textColor={"black"} onClick={onServicesClick}>Services</BtnSmall>
                 {session?
                 (<>
                 <BtnSmall className="box" withBackground={false} withBorder={false} onClick={onSignoutClick} textColor="red">Sign out</BtnSmall>
@@ -51,6 +53,7 @@ const Header_ = (session_) => {
                 <BtnSmall className = "box" withBackground={false} withBorder={false} onClick={onLoginClick}>Login</BtnSmall>
                 <BtnSmall className = "box" withBackground={true} withBorder={true} onClick={onSignupClick}>Register</BtnSmall>
                 </>)}
+            </div>
             </div>
         </>
     );

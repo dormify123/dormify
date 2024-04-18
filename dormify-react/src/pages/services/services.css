@@ -99,3 +99,46 @@
 .dorm-creation-input:focus::placeholder {
   color: transparent;
 }
+.dorm-management-row{
+  display:flex;
+  flex-direction:  column;
+  gap:5px;
+}
+.management-wrapper{
+  display:flex;
+  flex-direction:row;
+  width:100%;
+  justify-content: space-between;
+  min-height:220px;
+}
+.table-wrapper{
+  display:flex;
+  flex-direction:column;
+  margin-right:60px;
+  margin-left:60px;
+  margin-top:100px;
+}
+.table-title{
+  font-weight:bold;
+  font-size:20px;
+}
+.user-management-wrapper{
+  min-height:250px;
+  height:250px;
+  width:30%;
+}
+.user-management-container{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  align-items: center;
+}
+.user-management-entry{
+  display:flex;
+  flex-direction:row;
+  width:100%;
+  align-items: center;
+  justify-content: center;
+  padding:20px;
+  gap:3px;
+}

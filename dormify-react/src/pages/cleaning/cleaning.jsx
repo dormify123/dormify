@@ -30,7 +30,9 @@ const timeSlots = [
   "2:45-3:00 PM",
 ];
 
-const CleaningSchedule = () => {
+const CleaningSchedule = (session_) => {
+  const {session} = session_;
+  const {user} = session;
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState("");
   const [reservedSlots, setReservedSlots] = useState({});

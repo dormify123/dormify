@@ -1,7 +1,7 @@
 import "./profile.css";
 import profileIcon from '../../assets/profile-icon.png';
 import BtnMedium from '../../modules/buttons/medium/btn-medium'
-import { getUserProfileInformation, getUserRole, getUserDorm, changeUserInformation, getUserProfilePicture, leaveDorm} from "../../utils/services/users";
+import { getUserProfileInformation, getUserRole, getUserDorm, changeUserInformation, getUserProfilePicture, leaveDorm, getResidents} from "../../utils/services/users";
 import {useState, useEffect} from 'react';
 import { useFilePicker } from 'use-file-picker';
 import {
@@ -19,7 +19,6 @@ const Profile = (session_) => {
   const [userDorm, setUserDorm] = useState(null);
   const [disabled, setSaveDisabled] = useState(true);
   const [profilePicture, setProfilePicture] = useState(null);
-
 
   const { openFilePicker, filesContent, loading, errors } = useFilePicker({
     readAs: 'DataURL',
@@ -52,7 +51,7 @@ const Profile = (session_) => {
     const fetchUserDorm = async() => {
       console.log(user);
       const drm = await getUserDorm(user);
-      if(drm.dorm_name != null) {
+      if(drm != null) {
       setUserDorm(drm);
       }
     }

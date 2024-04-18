@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./services.css";
 import BtnMedium from "../../modules/buttons/medium/btn-medium";
+import ResidentsTable from '../../modules/tables/residents/residentsTable';
+import CheckinsTable from '../../modules/tables/checkins/checkinsTable';
 import {
   registerUserRole,
   getUserDorm,
@@ -8,6 +10,11 @@ import {
   getUserRoomNumber,
   createDorm,
   joinDorm,
+  getResidents,
+  getCheckins,
+  getResident,
+  assignRoom,
+  kickUser
 } from "../../utils/services/users";
 import { useNavigate } from "react-router-dom";
 const Services = (session_) => {
@@ -17,10 +24,35 @@ const Services = (session_) => {
     const [userRole, setUserRole] = useState(null);
     const [userDorm, setUserDorm] = useState(0);
     const [roomNum, setRoomNum] = useState(-1);
+    const [residents, setResidents] = useState(null);
+    const [checkins, setCheckins] = useState(null);
+    const [selectedResidentId, setSelectedResidentId] = useState(null);
+    const [selectedResident, setSelectedResident] = useState(null);
+    const[assignRoomButtonDisabled, setAssignRoomButtonDisabled] = useState(true);
+    useEffect(() => {
+      // Fetch selected resident details when selectedResidentId changes
+      const fetchSelectedResident = async () => {
+          if (selectedResidentId) {
+            console.log("selected resident id within the useEffect: " + selectedResidentId);
+              const selectedResidentDetails = await getResident(selectedResidentId);
+              console.log(selectedResidentDetails);
+              setSelectedResident(selectedResidentDetails);
+          }
+      };
+
+      fetchSelectedResident();
+  }, [selectedResidentId]);
     useEffect(() =>{
         const fetchUserRole = async()=>{
             const role = await getUserRole(session.user);
             setUserRole(role);
+            if(role === "dormowner")
+            {
+              await fetchResidents();
+              await fetchCheckins();
+            }
+            if(role === "resident")
+              fetchUserRommNum();
         }
         const fetchUserDorm = async()=>{
             const dorm_query = await getUserDorm(session.user);
@@ -29,14 +61,27 @@ const Services = (session_) => {
                 setUserDorm(dorm_query.dorm_name);
         }
         const fetchUserRommNum = async ()=>{
-            const room_query = await getUserRoomNumber(session.user);
-            console.log(room_query);
-            if(room_query)
-                setRoomNum(room_query.room_number);
+            const room_query = await getUserRoomNumber(user);
+            if(room_query.room_num === null)
+              setRoomNum(-1);
         }
-        fetchUserDorm();
-        fetchUserRole();
-        fetchUserRommNum();
+        const fetchResidents = async ()=>{
+          let inner_role = await getUserRole(user);
+          console.log(inner_role);
+          if(inner_role === "dormowner")
+          {
+            setResidents(await getResidents(user));
+          }
+        };
+        const fetchCheckins = async () =>{
+          let checkins = await getCheckins(user);
+          console.log(checkins);
+          setCheckins(checkins);
+        }
+        if(!userDorm)
+          fetchUserDorm();
+        if(!userRole)
+          fetchUserRole();
     },[]);
     async function onRegisterRoleClick(role) {
         console.log(role);
@@ -45,7 +90,6 @@ const Services = (session_) => {
         console.log(message);
         nav('/services');
     }
-
   const onCreateDormClick = async () => {
     const dorm_name = document.getElementById("dorm_name").value;
     const dorm_email = document.getElementById("dorm_email").value;
@@ -74,7 +118,29 @@ const Services = (session_) => {
       console.error(error);
     }
   };
-
+  async function handleAssignRoom(){
+    let error = await assignRoom(selectedResident,document.getElementById("room_num").value);
+    console.log("ROOM CHANGE ERROR HERE: ");
+      if(error)
+        console.log(error.message);
+    setAssignRoomButtonDisabled(true);
+  }
+  function handleRoomNumChange(e) {
+    const { value } = e.target;
+    setAssignRoomButtonDisabled(false);
+    setSelectedResident(prevState => ({
+        ...prevState,
+        room_num: value
+    }));
+}
+  async function handleUserKicking(){
+    let error = await kickUser(selectedResident);
+    if(error)
+      console.log(error);
+    setSelectedResident(null);
+    let updatedResidents = await getResidents(user);
+    setResidents(updatedResidents);
+  }
   return (
     <>
       <div className="message-top">
@@ -191,15 +257,12 @@ const Services = (session_) => {
             </div>
           </div>
         </div>
-      ) : (
-        <div className="wrapper">
+      ) : (userRole === "resident"?<>
+              <div className="wrapper">
           <div className="message-box">
-            <div className="services-message">
-              <h className="message-text-large">
-                You are registered as a {userRole}
-              </h>
+          <div className="services-message">
               <h className="message-text-small">
-                You are part of dorm {userDorm}, {roomNum != - 1?<>room number {roomNum}</>:<>You are not assigned a room yet</>}.
+                You are part of dorm {userDorm}, {(roomNum != - 1 || roomNum === null)?<>room number {roomNum}</>:<>You are not assigned a room yet</>}.
               </h>
             </div>
             <div className="services-box">
@@ -226,8 +289,31 @@ const Services = (session_) => {
               </BtnMedium>
             </div>
           </div>
+        </div></>:<>
+        <div className="wrapper">
+        <div className="management-wrapper">
+          <div className="table-wrapper">
+                <ResidentsTable title = {"Residents"} custom_data = {residents} handleButtonClick={setSelectedResidentId}></ResidentsTable>
+          </div>
+          <div className="table-wrapper">
+                <CheckinsTable title = {"Check-ins"} checkins_customData = {checkins} ></CheckinsTable>
+          </div>
         </div>
-      )}
+        <div className="user-management-wrapper">
+        {selectedResident?<>
+                <div className="user-management-container">
+                  <div className="user-management-entry">
+                    <input onChange = {handleRoomNumChange} id="room_num" type = "number" value ={selectedResident.room_num}></input>
+                  </div>
+                  <div className="user-management-entry">
+                    <BtnMedium withBackground={true} withBorder={true} backgroundColor = {"red"} onClick={handleUserKicking}>Kick</BtnMedium>
+                    <BtnMedium withBackground={true} withBorder={true} onClick={handleAssignRoom} disabled={assignRoomButtonDisabled}>Assign Room</BtnMedium>
+                  </div>
+        </div></>:
+        <></>}
+        </div>
+        </div>
+        </>)}
     </>);
 }
 export default Services;
