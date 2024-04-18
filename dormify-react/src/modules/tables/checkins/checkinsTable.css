@@ -1,0 +1,40 @@
+
+.checkins-scroll-container {
+    width: 300px; /* Adjust width as needed */
+    height: auto;
+    min-height:200px;
+    max-height:250px; /* Adjust height as needed */
+    overflow-y: scroll; /* Enable scrolling */
+    display:flex;
+    flex-direction: column;
+    border:1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .checkins-entry {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto; /* Increased height for better visibility */
+    padding: 10px; /* Added padding for spacing */
+    background-color: #ccc; /* Light background color */
+    font-size: 13px; /* Larger font size for readability */
+  }
+  .checkins-entry:hover{
+    background-color: #cccc;
+    cursor: pointer;
+  }
+  .checkins-entry-text{
+    margin-left:3px;
+    font-size:11px;
+  }
+  .checkins-table-title{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    font-weight:bold;
+    font-size:16px;
+    width:100%;
+    color:#4248D1;
+  }
+  
