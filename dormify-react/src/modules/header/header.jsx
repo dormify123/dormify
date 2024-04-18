@@ -1,61 +1,111 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./header.css";
 import BtnSmall from "../buttons/small/btn-small";
-import { useNavigate } from "react-router-dom";
-import './header.css'
-import {userSignOut} from '../../utils/services/auth'
-const Header_ = (session_) => {
-    const {session} = session_;
-    console.log(session);
-    const nav = useNavigate();
-    function onSignupClick(event){
-        nav('signup');
+import Modal from "../modals/modals.jsx";
+import { userSignOut } from "../../utils/services/auth";
+
+const Header_ = ({ session }) => {
+  const navigate = useNavigate();
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleModalClose = () => setModalOpen(false);
+
+  function onSignupClick(event) {
+    event.preventDefault();
+    navigate("signup");
+  }
+
+  function onLoginClick(event) {
+    event.preventDefault();
+    navigate("login");
+  }
+
+  function onHomeClick(event) {
+    event.preventDefault();
+    navigate("/");
+  }
+
+  function onServicesClick(event) {
+    event.preventDefault();
+    if (session) {
+      navigate("services");
+    } else {
+      setModalOpen(true);
     }
-    function onLoginClick(event){
-        nav('login');
+  }
+
+  async function onSignoutClick(event) {
+    event.preventDefault();
+    let error = await userSignOut();
+    if (error) {
+      alert(error.message);
     }
-    function onHomeClick(event){
-        nav('/');
-    }
-    function onServicesClick(event){
-        if(session)
-            nav('services');
-        else 
-            nav('signup');
-    }
-    async function onSignoutClick(event){
-        let error = await userSignOut();
-        if(error)
-            alert(error.message);
-        nav('/');
-    }
-    async function onProfileClick(event){
-      nav('/profile');
-    }
-    return (
-        <>
-            <div className="header-container-row">
-                <div className ="box-invisible" style = {{width:'40px'}}></div>
-                <div className = "box logo"></div>
-                <div className="user-control-row">
-                    <BtnSmall className = "" withBackground={false} withBorder = {false} textColor={"black"} onClick = {onHomeClick}>Home</BtnSmall>
-                    <BtnSmall className ="" withBackground={false} withBorder={false} textColor={"black"} onClick={onServicesClick}>Services</BtnSmall>
-                {session?
-                (<>
-                <BtnSmall className="box" withBackground={false} withBorder={false} onClick={onSignoutClick} textColor="red">Sign out</BtnSmall>
-                <div className="box-invisible" style={{width:'20px'}}></div>
-                <div className="user-info-container">
-                <button className="user-pic-button" onClick={onProfileClick}>
-                  <img src={require('../../assets/profile-icon.png')} alt="Admin" className="user-pic-header" />
-                </button>
-                </div>
-                </>):
-                (<>
-                <BtnSmall className = "box" withBackground={false} withBorder={false} onClick={onLoginClick}>Login</BtnSmall>
-                <BtnSmall className = "box" withBackground={true} withBorder={true} onClick={onSignupClick}>Register</BtnSmall>
-                </>)}
+    navigate("/");
+  }
+
+  async function onProfileClick(event) {
+    event.preventDefault();
+    navigate("/profile");
+  }
+
+  return (
+    <>
+      <Modal
+        isOpen={isModalOpen}
+        message="Please log in to access the services."
+        onClose={handleModalClose}
+      />
+      <div className="header-container-row">
+        <div className="box-invisible" style={{ width: "40px" }}></div>
+        <div className="box logo" onClick={onHomeClick}></div>
+        <div className="box-invisible" style={{ width: "690px" }}></div>
+        <BtnSmall className="box" textColor={"black"} onClick={onHomeClick}>
+          Home
+        </BtnSmall>
+        <BtnSmall className="box" textColor={"black"} onClick={onServicesClick}>
+          Services
+        </BtnSmall>
+        <div className="box-invisible" style={{ width: "20px" }}></div>
+        {session ? (
+          <>
+            <BtnSmall className="box" textColor="red" onClick={onSignoutClick}>
+              Sign out
+            </BtnSmall>
+            <div className="box-invisible" style={{ width: "20px" }}></div>
+            <div className="user-info-container">
+              <button className="user-pic-button" onClick={onProfileClick}>
+                <img
+                  src={require("../../assets/profile-icon.png")}
+                  alt="Admin"
+                  className="user-pic-header"
+                />
+              </button>
             </div>
-            </div>
-        </>
-    );
+          </>
+        ) : (
+          <>
+            <BtnSmall
+              className="box"
+              withBackground={false}
+              withBorder={false}
+              onClick={onLoginClick}
+            >
+              Login
+            </BtnSmall>
+            <BtnSmall
+              className="box"
+              withBackground={true}
+              withBorder={true}
+              onClick={onSignupClick}
+            >
+              Register
+            </BtnSmall>
+          </>
+        )}
+      </div>
+    </>
+  );
 };
+
 export default Header_;

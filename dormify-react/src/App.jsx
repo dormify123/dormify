@@ -8,6 +8,8 @@ import Services from './pages/services/services';
 import LaundrySchedule from './pages/laundry/laundry';
 import CleaningSchedule from './pages/cleaning/cleaning';
 import CheckIn from './pages/checkIn/checkIn';
+import About from './pages/about/about';
+import ContactUs from './pages/contactus/contactus';
 import Footer from './modules/footer/footer';
 import { BrowserRouter, Routes, Route} from "react-router-dom";
 import {useState, useEffect} from 'react';
@@ -43,6 +45,8 @@ function App() {
             <Route path ="laundry" element = {<LaundrySchedule/>}></Route>
             <Route path ="cleaning" element = {<CleaningSchedule/>}></Route>
             <Route path ="checkIn" element = {<CheckIn session={session}/>}></Route>
+            <Route path ="about" element = {<About/>}></Route>
+            <Route path ="contact" element = {<ContactUs/>}></Route>
           </Routes>
           <Footer/>
         </BrowserRouter>

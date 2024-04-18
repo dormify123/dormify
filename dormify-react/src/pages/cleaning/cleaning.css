@@ -18,12 +18,16 @@
 
 .time-slot-label {
   margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .time-slot-select {
+  width: 100%;
   margin-bottom: 20px;
   padding: 10px;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .submit-button {
@@ -34,6 +38,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  margin-top: 10px;
 }
 
 .submit-button:hover {
@@ -46,4 +51,53 @@
 
 .reserved-slot {
   color: #aaa;
+  background-color: #f2f2f2;
+}
+
+.fc-event .fc-event-title,
+.fc-event .fc-event-time {
+  white-space: normal;
+}
+
+.fc .fc-timegrid-slot,
+.fc .fc-timegrid-slot-label {
+  height: 50px;
+}
+
+.fc-event {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2px;
+  font-size: 10px;
+  margin: auto;
+}
+
+.fc .fc-timegrid-slot {
+  min-height: 2em;
+}
+
+.confirm-reservation-cleaning {
+  background-color: #3f71cc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+
+.cancel-reservation-cleaning {
+  background-color: #3f71cc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
 }

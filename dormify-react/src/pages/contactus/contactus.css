@@ -1,0 +1,18 @@
+.contact-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.contact-title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.contact-container p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+}
