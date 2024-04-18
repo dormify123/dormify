@@ -32,29 +32,10 @@ async function getUserDorm(user_session){
             return data[0];
     }
 }
-async function getUserRoomNumber(userId) {
-    if (!userId) {
-      console.error('Invalid or missing userId');
-      return null;
-    }
-    
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('room_num')
-        .eq('id', userId)
-        .single();  
-    
-      if (error) {
-        console.error('Error fetching room number:', error.message);
-        return null;
-      }
-    
-      return data ? data.room_num : null;
-    } catch (error) {
-      console.error('Exception fetching room number:', error.message);
-      return null;
-    }
+async function getUserRoomNumber(user) {
+    let {id} = user;
+    let {data,error} = await supabase.from('resident').select('room_num').eq('user_id', id);
+    return data[0];
   }
   
   
@@ -192,16 +173,26 @@ async function getResidents(session)
         let {id} = session;
         let {data: dormOwnerQuery, error: errorDormOwner} = await supabase.from('roles').select('dormowner_id').eq('user_id',id);
         let {data: dormQuery, error: errorDorm} = await supabase.from('dorm').select('dorm_name').eq('dormowner_id', dormOwnerQuery[0].dormowner_id);
-        const { data, error } = await supabase.from('resident').select(`users (full_name)`).eq("dorm_name", dormQuery[0].dorm_name);
+        const { data, error } = await supabase.from('resident').select(`users (id,full_name)`).eq("dorm_name", dormQuery[0].dorm_name);
         if(error)
             console.log(error.message);
         return data;
     }
 }
+async function getResident(uuid)
+{
+    console.log("UUID IS: " + uuid);
+    let{data,error} = await supabase.from('resident').select('*').eq('user_id',uuid);
+    if(error)
+        console.log(error.message);
+    return data[0];
+}
 async function checkinLateUser(session, date_){
     let {id} = session;
     let{data, error : errorSequence1} = await supabase.from('sequence').select('value').eq('table_name', 'late_checkins');
-    let {error: errorLateCheckins} = await supabase.from('late_checkins').insert({user_id: id, date:date_.toISOString(), id: data[0].value});
+    let {data: dormData, error: dormError} = await supabase.from('resident').select('dorm_name').eq('user_id', id);
+    let dorm_name = dormData[0].dorm_name;
+    let {error: errorLateCheckins} = await supabase.from('late_checkins').insert({user_id: id, date:toLocaleISOString(date_), id: data[0].value, dorm_name: dorm_name});
     if(errorSequence1)
         console.log(errorSequence1.message);
     if(errorLateCheckins)
@@ -210,4 +201,45 @@ async function checkinLateUser(session, date_){
     if(errorSequence2)
         console.log(errorSequence2.message)
 }
-export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm, changeUserInformation, getUserProfilePicture, leaveDorm , getUserRoomNumber, getResidents, checkinLateUser};
+function toLocaleISOString(date) {
+    function pad(n) { return ("0"+n).substr(-2); }
+
+    var day = [date.getFullYear(), pad(date.getMonth()+1), pad(date.getDate())].join("-"),
+        time = [date.getHours(), date.getMinutes(), date.getSeconds()].map(pad).join(":");
+    if (date.getMilliseconds())
+        time += "."+date.getMilliseconds();
+    var o = date.getTimezoneOffset(),
+        h = Math.floor(Math.abs(o)/60),
+        m = Math.abs(o) % 60,
+        o = o==0 ? "Z" : (o<0 ? "+" : "-") + pad(h) + ":" + pad(m);
+    return day+"T"+time+o;
+}
+async function assignRoom(user, room_num_)
+{
+    let {user_id} = user;
+    let {error} = await supabase.from('resident').update({room_num:room_num_}).eq('user_id',user_id);
+    return error;
+}
+async function getCheckins(session)
+{
+    let {id} = session;
+    let { data: dormQuery, error: dormError } = await supabase.from('dormowner').select('dorm (dorm_name)').eq('user_id', id)
+    let dorm_name = dormQuery[0].dorm[0].dorm_name;
+    let {data: checkinsQuery, error: checkinsError} = await supabase.from('late_checkins').select('users (full_name), date').eq('dorm_name', dorm_name).order('date',{ascending:false});
+    let returnArray = new Array(dormQuery.length);
+    for (let i = 0; i < checkinsQuery.length; i++) {
+        let name = checkinsQuery[i].users.full_name;
+        let date = new Date(checkinsQuery[i].date);
+        let formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:00`;
+        returnArray[i] = { name, date:formattedDate };
+    }
+    return returnArray;
+}
+async function kickUser(user)
+{
+    let {user_id} = user;
+    let {error} = await supabase.from('resident').update({'dorm_name': null, room_num: null}).eq('user_id', user_id);
+    return error;
+}
+export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm, changeUserInformation, getUserProfilePicture, leaveDorm , getUserRoomNumber, getResidents, checkinLateUser,
+getCheckins, getResident, assignRoom, kickUser};

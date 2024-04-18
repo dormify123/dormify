@@ -16,8 +16,8 @@ const CheckIn = (session_) => {
   });
   const handleCheckIn = () => {
     const date = new Date();
-    const currentTime = date.toLocaleTimeString();
-    setCheckInTime(currentTime);
+    const localTimeString = date.toLocaleTimeString();
+    setCheckInTime(localTimeString);
     checkinLateUser(user,date);
   };
 
