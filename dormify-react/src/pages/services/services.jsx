@@ -44,13 +44,10 @@ const Services = (session_) => {
   }, [selectedResidentId]);
     useEffect(() =>{
         const fetchUserRole = async()=>{
-            const role = await getUserRole(session.user);
+            let role = await getUserRole(session.user);
             setUserRole(role);
-            if(role === "dormowner")
-            {
-              await fetchResidents();
-              await fetchCheckins();
-            }
+            if(!userDorm)
+              await fetchUserDorm();
             if(role === "resident")
               fetchUserRommNum();
         }
@@ -59,6 +56,11 @@ const Services = (session_) => {
             console.log(dorm_query);
             if(dorm_query)
                 setUserDorm(dorm_query.dorm_name);
+            if(userRole === "dormowner" && userDorm != 0)
+            {
+              await fetchResidents(session.user);
+              await fetchCheckins(session.user);
+            }
         }
         const fetchUserRommNum = async ()=>{
             const room_query = await getUserRoomNumber(user);
@@ -78,8 +80,7 @@ const Services = (session_) => {
           console.log(checkins);
           setCheckins(checkins);
         }
-        if(!userDorm)
-          fetchUserDorm();
+
         if(!userRole)
           fetchUserRole();
     },[]);

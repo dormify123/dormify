@@ -42,8 +42,8 @@ function App() {
             <Route path ="signup" element = {<Signup/>}></Route>
             <Route path ="profile" element = {<Profile session={session}/>}></Route>
             <Route path ="services" element = {<Services session = {session}></Services>}></Route>
-            <Route path ="laundry" element = {<LaundrySchedule/>}></Route>
-            <Route path ="cleaning" element = {<CleaningSchedule/>}></Route>
+            <Route path ="laundry" element = {<LaundrySchedule session = {session}/>}></Route>
+            <Route path ="cleaning" element = {<CleaningSchedule session ={session}/>}></Route>
             <Route path ="checkIn" element = {<CheckIn session={session}/>}></Route>
             <Route path ="about" element = {<About/>}></Route>
             <Route path ="contact" element = {<ContactUs/>}></Route>

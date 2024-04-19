@@ -5,19 +5,15 @@ const defaultData = [
     {
         users:{
             id: "1234",
-            full_name:"placeholder1"
-        }
-    },
-    {
-        users:{
-            id: "4321",
-            full_name:"placeholder2"
+            full_name:"no users in dorm"
         }
     }
 ];
 
 const ResidentsTable = ({title, custom_data, handleButtonClick}) => {
   const [residentsTableData, setresidentsTableData] = useState(defaultData);
+  if(!custom_data)
+    handleButtonClick =() => {};
   useEffect(() => {
     if (custom_data) {
       console.log("custom data updated");

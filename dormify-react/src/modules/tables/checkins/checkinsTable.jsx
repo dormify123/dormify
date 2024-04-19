@@ -3,12 +3,8 @@ import './checkinsTable.css';
 
 const defaultData = [
     {
-        name:"placeholder1",
-        date:"2024-1-7 11:00"
-    },
-    {
-        name:"placeholder2",
-        date:"2023-1-1 12:00"
+        name:"no checkins",
+        date:""
     }
 ];
 

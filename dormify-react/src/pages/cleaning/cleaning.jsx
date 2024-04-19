@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import {reserveSlot, getSlots} from '../../utils/services/users'
 import "../cleaning/cleaning.css";
 
-const CleaningSchedule = () => {
+const CleaningSchedule = (session_) => {
+  let {session} = session_;
+  let {user} = session;
   const [events, setEvents] = useState([]);
   const [selectedSlots, setSelectedSlots] = useState([]);
   const [tempEvent, setTempEvent] = useState(null);
+  useEffect(()=>{
+    const fetchSlots = async () =>{
+      let slots = await getSlots(user, 'cleaning');
+      setEvents(slots);
+    }
+    fetchSlots();
+  },[events]);
 
   const handleDateSelect = (selectInfo) => {
     const today = new Date();
@@ -28,7 +38,6 @@ const CleaningSchedule = () => {
     }
 
     const event = {
-      id: createEventId(),
       title: "Reserved",
       start: selectInfo.startStr,
       end: new Date(selectInfo.startStr).setMinutes(
@@ -40,14 +49,14 @@ const CleaningSchedule = () => {
     setTempEvent(event);
   };
 
-  const confirmReservation = () => {
+  const confirmReservation = async () => {
     if (tempEvent) {
       setEvents([...events, tempEvent]);
       setSelectedSlots([...selectedSlots, tempEvent]);
+      console.log( await reserveSlot(user, tempEvent, 'cleaning'));
       setTempEvent(null);
     }
   };
-
   const handleEventClick = (clickInfo) => {
     if (
       window.confirm(

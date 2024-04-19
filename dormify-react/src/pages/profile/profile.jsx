@@ -51,8 +51,10 @@ const Profile = (session_) => {
     const fetchUserDorm = async() => {
       console.log(user);
       const drm = await getUserDorm(user);
+      console.log(drm);
       if(drm != null) {
-      setUserDorm(drm);
+        if(drm.dorm_name != null)
+          setUserDorm(drm);
       }
     }
     const fetchUserProfilePicture  = async () =>{
@@ -110,7 +112,6 @@ const Profile = (session_) => {
     }
     ));
   }
-  
   return (
     <div className="profile-container">
       <div className="profilecard">

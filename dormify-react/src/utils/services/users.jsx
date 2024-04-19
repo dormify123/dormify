@@ -158,13 +158,24 @@ async function getUserProfilePicture(session){
     else if(data.length > 0) 
         return data[0].image_data;
 }
-async function leaveDorm(session)
-{
+async function leaveDorm(session){
+    let user_role = await getUserRole(session);
+    let user_dorm = await getUserDorm(session);
     let {id} = session;
-    let {error: dormQueryError} = await supabase.from('resident').update({dorm_name : "null"}).eq('user_id', id);
-    let {data} = await supabase.from('roles').select('dormowner_id').eq('user_id',id)
-    if(await getUserRole(session) === "dormowner")
-        console.log(await supabase.from('dorm').delete().eq("dormowner_id", data[0].dormowner_id));
+    if(user_role === "resident")
+    {
+        console.log(await supabase.from('resident').update({dorm_name: null}).eq('user_id', id));
+    }
+    else{
+        let {data: calendarQuery, error: calendarError} = await supabase.from('calendar').select('id').eq('dorm_name', user_dorm);
+        if(calendarError)
+            console.log(calendarError);
+        console.log(calendarQuery);
+        let calendar_id = calendarQuery[0].id;
+        console.log(await supabase.from('slots').delete().eq('calendar_id', calendar_id));
+        console.log(await supabase.from('calendar').delete().eq('id',calendar_id));
+    }
+
 }
 async function getResidents(session)
 {
@@ -241,5 +252,36 @@ async function kickUser(user)
     let {error} = await supabase.from('resident').update({'dorm_name': null, room_num: null}).eq('user_id', user_id);
     return error;
 }
+async function reserveSlot(session, event, type){
+    let {id} = session;
+    let {data: dormQuery, error:dormError} = await supabase.from('resident').select('dorm_name').eq('user_id', id);
+    let dorm_name = dormQuery[0].dorm_name;
+    let {data: calendarQuery, error: calendarError} = await supabase.from('calendar').select('id').eq('dorm_name', dorm_name).eq('name',type);
+    let calendar_id = calendarQuery[0].id;
+    let start_time = event.start;
+    let end_time = new Date(event.end);
+    let {data: slotsQuery, error: slotsError} = await supabase.from('slots').insert({calendar_id: calendar_id, start_time:start_time, end_time:toLocaleISOString(end_time)});
+    return {dormError, calendarError, slotsError};
+}
+async function getSlots(session, type)
+{
+    let {id} = session;
+    let {data:residentQuery, error:residentError} = await supabase.from('resident').select('dorm_name').eq('user_id',id);
+    let dorm_name = residentQuery[0].dorm_name;
+    let {data: calendarQuery, error: calendarError} = await supabase.from('calendar').select('*').eq('name', type).eq('dorm_name', dorm_name);
+    let calendar_id = calendarQuery[0].id;
+    let {data: slotsQuery, error: slotsError} =  await supabase.from('slots').select('*').eq('calendar_id', calendar_id);
+    let return_array = new Array(slotsQuery.length);
+    for(let i = 0; i < slotsQuery.length;i++){
+        let end_time = new Date(slotsQuery[i].end_time);
+        return_array[i]={
+            title: "Reserved",
+            start: slotsQuery[i].start_time,
+            end: end_time.getTime(),
+            selectInfo : null 
+        }
+    }
+    return return_array;
+}
 export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm, changeUserInformation, getUserProfilePicture, leaveDorm , getUserRoomNumber, getResidents, checkinLateUser,
-getCheckins, getResident, assignRoom, kickUser};
+getCheckins, getResident, assignRoom, kickUser, reserveSlot, getSlots};

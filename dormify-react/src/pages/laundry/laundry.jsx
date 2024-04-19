@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import {reserveSlot, getSlots} from '../../utils/services/users';
 import "../laundry/laundry.css";
 
-const LaundrySchedule = () => {
+const LaundrySchedule = (session_) => {
+  let {session} = session_;
+  let {user} = session;
   const [events, setEvents] = useState([]);
   const [selectedSlots, setSelectedSlots] = useState([]);
   const [tempEvent, setTempEvent] = useState(null);
-
+  useEffect(()=>{
+    const fetchSlots = async()=>{
+      let slots = await getSlots(user, 'laundry');
+      setEvents(slots);
+    }
+    fetchSlots();
+  },[events])
   const handleDateSelect = (selectInfo) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -44,6 +53,7 @@ const LaundrySchedule = () => {
     if (tempEvent) {
       setEvents([...events, tempEvent]);
       setSelectedSlots([...selectedSlots, tempEvent]);
+      reserveSlot(user, tempEvent, 'laundry');
       setTempEvent(null);
     }
   };
