@@ -3,22 +3,25 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import {reserveSlot, getSlots} from '../../utils/services/users';
+import { reserveSlot, getSlots } from "../../utils/services/users";
 import "../laundry/laundry.css";
 
-const LaundrySchedule = (session_) => {
-  let {session} = session_;
-  let {user} = session;
+const LaundrySchedule = ({ session }) => {
+  const user = session?.user;
   const [events, setEvents] = useState([]);
   const [selectedSlots, setSelectedSlots] = useState([]);
   const [tempEvent, setTempEvent] = useState(null);
-  useEffect(()=>{
-    const fetchSlots = async()=>{
-      let slots = await getSlots(user, 'laundry');
-      setEvents(slots);
-    }
+
+  useEffect(() => {
+    const fetchSlots = async () => {
+      if (user) {
+        const slots = await getSlots(user, "laundry");
+        setEvents(slots);
+      }
+    };
     fetchSlots();
-  },[events])
+  }, [user]); // Depend on user to avoid refetching unnecessarily
+
   const handleDateSelect = (selectInfo) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -26,37 +29,54 @@ const LaundrySchedule = (session_) => {
 
     if (selectedDate < today) {
       alert("You cannot reserve a slot in the past.");
-      selectInfo.view.calendar.unselect();
       return;
     }
 
     if (selectedSlots.length >= 2) {
       alert("You can only reserve two slots.");
-      selectInfo.view.calendar.unselect();
       return;
     }
+
+    const startTime = new Date(selectInfo.startStr);
+    const endTime = new Date(startTime);
+    endTime.setMinutes(startTime.getMinutes() + 30);
 
     const event = {
       id: createEventId(),
       title: "Reserved",
-      start: selectInfo.startStr,
-      end: new Date(selectInfo.startStr).setMinutes(
-        new Date(selectInfo.startStr).getMinutes() + 30
-      ),
+      start: startTime.toISOString(),
+      end: endTime.toISOString(),
       allDay: selectInfo.allDay,
     };
 
     setTempEvent(event);
   };
 
-  const confirmReservation = () => {
-    if (tempEvent) {
-      setEvents([...events, tempEvent]);
-      setSelectedSlots([...selectedSlots, tempEvent]);
-      reserveSlot(user, tempEvent, 'laundry');
+  const confirmReservation = async () => {
+    if (!tempEvent) {
+      console.error("No event selected for reservation.");
+      return;
+    }
+  
+    // Check if there is a valid user session and user object
+    if (!session || !session.user) {
+      alert("No user session found. Please log in to reserve a slot.");
+      console.error("No user session found. Unable to reserve slot.");
+      return;
+    }
+  
+    // Proceed with reservation since session and user are valid
+    const error = await reserveSlot(session.user, tempEvent, 'laundry');
+    if (!error) {
+      setEvents(prevEvents => [...prevEvents, { ...tempEvent, id: createEventId() }]);
+      setSelectedSlots(prevSlots => [...prevSlots, { ...tempEvent, id: createEventId() }]);
       setTempEvent(null);
+    } else {
+      console.error("Failed to reserve slot:", error);
+      alert("Failed to reserve slot. Please try again.");
     }
   };
+  
 
   const handleEventClick = (clickInfo) => {
     if (
@@ -68,7 +88,6 @@ const LaundrySchedule = (session_) => {
         (event) => event.id !== clickInfo.event.id
       );
       setEvents(remainingEvents);
-
       const updatedSelectedSlots = selectedSlots.filter(
         (slot) => slot.id !== clickInfo.event.id
       );
@@ -97,7 +116,7 @@ const LaundrySchedule = (session_) => {
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
         slotMinTime="06:00:00"
-        slotMaxTime="24:00:00"
+        slotMaxTime="23:59:59"
         selectable={true}
         selectMirror={true}
         dayMaxEvents={true}

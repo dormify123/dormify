@@ -252,17 +252,65 @@ async function kickUser(user)
     let {error} = await supabase.from('resident').update({'dorm_name': null, room_num: null}).eq('user_id', user_id);
     return error;
 }
-async function reserveSlot(session, event, type){
-    let {id} = session;
-    let {data: dormQuery, error:dormError} = await supabase.from('resident').select('dorm_name').eq('user_id', id);
-    let dorm_name = dormQuery[0].dorm_name;
-    let {data: calendarQuery, error: calendarError} = await supabase.from('calendar').select('id').eq('dorm_name', dorm_name).eq('name',type);
-    let calendar_id = calendarQuery[0].id;
+const serviceToCalendarId = {
+    laundry: 1, // Assuming '1' is the calendar_id for laundry services
+    cleaning: 2  // Assuming '2' is the calendar_id for cleaning services
+  };
+  async function reserveSlot(session, event, type) {
+    if (!session || !session.user) {
+      console.error("No user session found");
+      return;  // Exit if no session or user in session
+    }
+  
+    let userId = session.user.id;
+    let { user } = session;
+  
+    if (!user || !user.id) {
+      console.error("No user session found");
+      return;
+    }
+  
+    // Use the mapping to get the correct calendar_id
+    const calendarId = serviceToCalendarId[type];
+    if (!calendarId) {
+      console.error("Invalid service type provided");
+      return;
+    }
+  
+    let { data: dormQuery, error: dormError } = await supabase
+      .from('resident')
+      .select('dorm_name')
+      .eq('user_id', user.id);
+  
+    if (dormError) {
+      console.error("Error fetching dorm information:", dormError.message);
+      return;
+    }
+  
+    let dorm_name = dormQuery[0]?.dorm_name;
     let start_time = event.start;
     let end_time = new Date(event.end);
-    let {data: slotsQuery, error: slotsError} = await supabase.from('slots').insert({calendar_id: calendar_id, start_time:start_time, end_time:toLocaleISOString(end_time)});
-    return {dormError, calendarError, slotsError};
-}
+  
+    let { error: slotsError } = await supabase
+      .from('slots')
+      .insert({
+        calendar_id: calendarId,
+        user_id: user.id,  // Ensure you are sending the user ID
+        start_time: start_time,
+        end_time: end_time
+      });
+  
+    if (slotsError) {
+      console.error("Error reserving slot:", slotsError.message);
+      return { error: slotsError };
+    }
+  
+    return { success: true };
+  }
+  
+  
+  
+  
 async function getSlots(session, type)
 {
     let {id} = session;
