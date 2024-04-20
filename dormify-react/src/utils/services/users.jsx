@@ -260,7 +260,7 @@ async function reserveSlot(session, event, type){
     let calendar_id = calendarQuery[0].id;
     let start_time = event.start;
     let end_time = new Date(event.end);
-    let {data: slotsQuery, error: slotsError} = await supabase.from('slots').insert({calendar_id: calendar_id, start_time:start_time, end_time:toLocaleISOString(end_time)});
+    let {data: slotsQuery, error: slotsError} = await supabase.from('slots').insert({calendar_id: calendar_id, start_time:start_time, end_time:toLocaleISOString(end_time), user_id: event.user_id});
     return {dormError, calendarError, slotsError};
 }
 async function getSlots(session, type)
@@ -275,13 +275,37 @@ async function getSlots(session, type)
     for(let i = 0; i < slotsQuery.length;i++){
         let end_time = new Date(slotsQuery[i].end_time);
         return_array[i]={
+            id: slotsQuery[i].id,
+            user_id: slotsQuery[i].user_id,
             title: "Reserved",
             start: slotsQuery[i].start_time,
             end: end_time.getTime(),
             selectInfo : null 
         }
     }
+    console.log(return_array[0]);
     return return_array;
 }
+async function removeSlot(event, type, session)
+{
+    console.log(event);
+    let {id} = session;
+    let {data: dormQuery, error:dormError} = await supabase.from('resident').select('dorm_name').eq('user_id', id);
+    let dorm_name = dormQuery[0].dorm_name;
+    let {data: calendarQuery, error: calendarError} = await supabase.from('calendar').select('id').eq('dorm_name', dorm_name).eq('name',type);
+    let calendar_id = calendarQuery[0].id;
+    let {error: deletionError} = await supabase.from('slots').delete().eq('user_id', event.extendedProps.user_id).eq('calendar_id', calendar_id).eq('id',event.id);
+    return {dormError, calendarError, deletionError};
+}
+async function slotIsForUser(event, session)
+{
+    let {id} = session;
+    console.log(event);
+    console.log(id);
+    if(event.extendedProps.user_id === id)
+        return true;
+    else 
+        return false;
+}
 export{createUser, getUserProfileInformation, registerUserRole, getUserRole, getUserDorm, createDorm, joinDorm, changeUserInformation, getUserProfilePicture, leaveDorm , getUserRoomNumber, getResidents, checkinLateUser,
-getCheckins, getResident, assignRoom, kickUser, reserveSlot, getSlots};
+getCheckins, getResident, assignRoom, kickUser, reserveSlot, getSlots, removeSlot, slotIsForUser};

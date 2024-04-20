@@ -3,7 +3,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import {reserveSlot, getSlots} from '../../utils/services/users';
+import {reserveSlot, getSlots, removeSlot, slotIsForUser} from '../../utils/services/users';
+import BtnMedium from '../../modules/buttons/medium/btn-medium.jsx'
 import "../laundry/laundry.css";
 
 const LaundrySchedule = (session_) => {
@@ -12,13 +13,47 @@ const LaundrySchedule = (session_) => {
   const [events, setEvents] = useState([]);
   const [selectedSlots, setSelectedSlots] = useState([]);
   const [tempEvent, setTempEvent] = useState(null);
+  const [deleteDisabled, setDeleteDisabled] = useState(true);
+  const [modifyDisabled, setModifyDisabled] = useState(true);
+  const [currentSlotForUser, setCurrentSlotForUser] = useState(false);
   useEffect(()=>{
-    const fetchSlots = async()=>{
+    const fetchSlots = async () =>{
       let slots = await getSlots(user, 'laundry');
       setEvents(slots);
     }
     fetchSlots();
-  },[events])
+  },[user]);
+  useEffect(()=>{
+    const fetchSlotIsForUser = async()=>{
+      if(tempEvent)
+      {
+        if(tempEvent.id === null)
+        {
+          setModifyDisabled(false);
+          setDeleteDisabled(true);
+        }
+        else{
+          let slot_for_user = await slotIsForUser(tempEvent, user);
+          console.log(slot_for_user);
+          setCurrentSlotForUser(slot_for_user);
+          if(slot_for_user){
+            setModifyDisabled(false);
+            setDeleteDisabled(false);
+          }
+          else 
+          {
+            setModifyDisabled(true);
+            setDeleteDisabled(true);
+          }
+        }
+      }
+      else {
+        setModifyDisabled(true);
+        setDeleteDisabled(true);
+      }
+      }
+      fetchSlotIsForUser();
+  },[tempEvent]);
   const handleDateSelect = (selectInfo) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -37,11 +72,12 @@ const LaundrySchedule = (session_) => {
     }
 
     const event = {
-      id: createEventId(),
+      id:null,
+      user_id: user.id,
       title: "Reserved",
       start: selectInfo.startStr,
       end: new Date(selectInfo.startStr).setMinutes(
-        new Date(selectInfo.startStr).getMinutes() + 30
+        new Date(selectInfo.startStr).getMinutes() + 120
       ),
       allDay: selectInfo.allDay,
     };
@@ -49,31 +85,29 @@ const LaundrySchedule = (session_) => {
     setTempEvent(event);
   };
 
-  const confirmReservation = () => {
+  const confirmReservation = async () => {
     if (tempEvent) {
-      setEvents([...events, tempEvent]);
+      console.log( await reserveSlot(user, tempEvent, 'laundry'));
+      setEvents(await getSlots(user, 'laundry'));
       setSelectedSlots([...selectedSlots, tempEvent]);
-      reserveSlot(user, tempEvent, 'laundry');
+      setModifyDisabled(true);
+      setDeleteDisabled(true);
       setTempEvent(null);
     }
   };
 
-  const handleEventClick = (clickInfo) => {
-    if (
-      window.confirm(
-        `Are you sure you want to remove the slot: '${clickInfo.event.title}'`
-      )
-    ) {
-      const remainingEvents = events.filter(
-        (event) => event.id !== clickInfo.event.id
-      );
-      setEvents(remainingEvents);
-
-      const updatedSelectedSlots = selectedSlots.filter(
-        (slot) => slot.id !== clickInfo.event.id
-      );
-      setSelectedSlots(updatedSelectedSlots);
-    }
+  const handleEventClick = (info) => {
+    setTempEvent(info.event);
+  };
+  const handleEventMouseEnter = (info) => {
+    const targetElement = info.el.querySelector('.fc-event-title');
+    console.log(targetElement);
+    info.el.style.backgroundColor = '#309e02';
+    info.el.style.cursor = 'pointer';
+  };
+  const handleEventMouseLeave = (info) => {
+    console.log("mouse leave");
+    info.el.style.backgroundColor = '#378006';
   };
 
   function createEventId() {
@@ -89,7 +123,16 @@ const LaundrySchedule = (session_) => {
       date.getHours()
     ).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
   }
-
+  async function handleDeleteSlot()
+  {
+    let event = tempEvent;
+    let error = await removeSlot(event,'laundry',user);
+    console.log(error);
+    setEvents(await getSlots(user, 'laundry'));
+    setModifyDisabled(true);
+    setDeleteDisabled(true);
+    setTempEvent(null);
+  }
   return (
     <div className="laundry-container">
       <h1 className="laundry-title">Laundry Schedule</h1>
@@ -105,31 +148,25 @@ const LaundrySchedule = (session_) => {
         allDaySlot={false}
         events={events}
         select={handleDateSelect}
+        eventMouseEnter={handleEventMouseEnter}
+        eventMouseLeave={handleEventMouseLeave}
         eventClick={handleEventClick}
-        slotDuration="00:30:00"
-        slotLabelInterval="00:30:00"
+        slotDuration="02:00:00"
+        slotLabelInterval="02:00:00"
         eventColor="#378006"
       />
-      {tempEvent && (
-        <div className="confirmation-box">
-          <p>
-            You have selected slot from {formatDateTime(tempEvent.start)} to{" "}
-            {formatDateTime(tempEvent.end)}
-          </p>
-          <button
-            className="confirm-reservation-laundry"
-            onClick={confirmReservation}
-          >
-            Confirm Reservation
-          </button>
-          <button
-            className="cancel-reservation-laundry"
-            onClick={() => setTempEvent(null)}
-          >
-            Cancel
-          </button>
+      <div className="modification-box">
+      {!modifyDisabled && tempEvent? (
+        <>
+        <p>You have selected slot from {formatDateTime(tempEvent.start)} to{" "}{formatDateTime(tempEvent.end)}</p>
+        <div className ="confirmation-box">
+          <BtnMedium withBackground={true} withBorder={true} onClick={confirmReservation}>Confirm</BtnMedium>
+          <BtnMedium withBackground={true} withBorder={true} onClick={()=>setTempEvent(null)}>Cancel</BtnMedium>
+          <BtnMedium withBackground={true} withBorder={true} backgroundColor={"red"} onClick={handleDeleteSlot} disabled={deleteDisabled}>Delete</BtnMedium>
         </div>
-      )}
+        </>
+      ):<></>}
+      </div>
     </div>
   );
 };

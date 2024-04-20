@@ -5,13 +5,6 @@
   text-align: center;
 }
 
-.calendar-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
 .laundry-title {
   font-size: 24px;
   margin-bottom: 20px;
@@ -25,12 +18,16 @@
 
 .time-slot-label {
   margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .time-slot-select {
+  width: 100%;
   margin-bottom: 20px;
   padding: 10px;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .submit-button {
@@ -41,6 +38,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  margin-top: 10px;
 }
 
 .submit-button:hover {
@@ -53,6 +51,32 @@
 
 .reserved-slot {
   color: #aaa;
+  background-color: #f2f2f2;
+}
+
+.fc-event .fc-event-title,
+.fc-event .fc-event-time {
+  white-space: normal;
+}
+
+.fc .fc-timegrid-slot,
+.fc .fc-timegrid-slot-label {
+  height: 50px;
+}
+
+.fc-event {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2px;
+  font-size: 10px;
+  margin: auto;
+}
+
+.fc .fc-timegrid-slot {
+  min-height: 2em;
 }
 
 .confirm-reservation-laundry {
@@ -76,4 +100,28 @@
   cursor: pointer;
   font-size: 16px;
   margin-top: 10px;
+}
+.edit-slot-box{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  width:100%;
+  height:auto;
+  min-height:20px;
+}
+.modification-box{
+  display:flex;
+  gap:7px;
+  flex-direction: column;
+  min-height:80px;
+  height:auto;
+}
+.confirmation-box{
+  display:flex;
+  flex-direction: row;
+  gap:15px;
+  padding:5px;
+  width:100%;
+  align-items: center;
+  justify-content: center;
 }

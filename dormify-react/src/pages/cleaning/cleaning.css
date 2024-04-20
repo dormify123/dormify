@@ -101,3 +101,27 @@
   font-size: 16px;
   margin-top: 10px;
 }
+.edit-slot-box{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  width:100%;
+  height:auto;
+  min-height:20px;
+}
+.modification-box{
+  display:flex;
+  gap:7px;
+  flex-direction: column;
+  min-height:80px;
+  height:auto;
+}
+.confirmation-box{
+  display:flex;
+  flex-direction: row;
+  gap:15px;
+  padding:5px;
+  width:100%;
+  align-items: center;
+  justify-content: center;
+}
