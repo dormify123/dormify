@@ -283,7 +283,7 @@ const Services = (session_) => {
           <div className="message-box">
           <div className="services-message">
               <h className="message-text-small">
-                You are part of dorm {userDorm}, {(roomNum != - 1 || roomNum === null)?<>room number {roomNum}</>:<>You are not assigned a room yet</>}.
+                You are part of dorm {userDorm} {(roomNum != - 1 || roomNum === null)?<>room number {roomNum}</>:<></>}.
               </h>
             </div>
             <div className="services-box">
