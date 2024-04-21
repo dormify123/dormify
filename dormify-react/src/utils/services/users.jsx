@@ -181,9 +181,10 @@ async function leaveDorm(session){
             console.log(await supabase.from('slots').delete().eq('calendar_id', calendar_id));
             console.log(await supabase.from('calendar').delete().eq('id',calendar_id));
         }
+        let {error: errorDeletingCheckins} = await supabase.from('late_checkins').delete().eq('dorm_name', user_dorm);
         let {error: errorDormDeletion} = await supabase.from('dorm').delete().eq('dorm_name', user_dorm);
         let {error: errorUnassigningResidents} = await supabase.from('resident').update({dorm_name:null}).eq('dorm_name', user_dorm);
-        return {errorDormDeletion, errorUnassigningResidents};
+        return {errorDormDeletion, errorUnassigningResidents, errorDeletingCheckins};
     }
 
 }

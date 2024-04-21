@@ -39,13 +39,16 @@ const Home = (session_ ) => {
     let userRole = await fetchUserRole();
     let userDorm = await fetchUserDorm();
     console.log(userRole);
-    if (session_ && (userRole === "resident" || userRole === "dormowner")) {
+    if (session && (userRole === "resident" || userRole === "dormowner")) {
       if(userDorm)
         navigate(route);
-      else 
+      else
         navigate("services");
-    } else {
+    } else if (!session) {
       setModalOpen(true);
+    }
+    else {
+      navigate('services');
     }
   };
 
@@ -85,7 +88,7 @@ const Home = (session_ ) => {
           <p className="shadowed grey-text">
             Implementing Solutions for Efficient Dormitory Management
           </p>
-          {!session_ ? (
+          {!session ? (
             <button className="btn-register" onClick={handleRegisterClick}>
               Register
             </button>
