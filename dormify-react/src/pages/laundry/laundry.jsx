@@ -93,8 +93,8 @@ const LaundrySchedule = (session_) => {
       console.log( await reserveSlot(user, tempEvent, 'laundry'));
       setEvents(await getSlots(user, 'laundry'));
       setSelectedSlots([...selectedSlots, tempEvent]);
-      setModifyDisabled(true);
-      setDeleteDisabled(true);
+      let slots_for_user = await getSlotsByUser(user, 'laundry');
+      setSlotsForUser(slots_for_user);
       setTempEvent(null);
     }
   };
