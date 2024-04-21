@@ -48,4 +48,19 @@ async function userSignOut(){
         return error;
     }
 }
-export {userSignUp, userLogin, userSignOut};
+async function resetPassword(email) {
+    try {
+        // Send a verification email for password recovery
+        const { error: sendEmailError } = await supabase.auth.api.sendPasswordRecoveryEmail(email);
+
+        if (sendEmailError) {
+            throw new Error('Failed to send password recovery email');
+        }
+
+        return true; // Indicate successful password recovery email sent
+    } catch (error) {
+        console.error("Password reset failed:", error.message);
+        throw error;
+    }
+}
+export {userSignUp, userLogin, userSignOut, resetPassword};

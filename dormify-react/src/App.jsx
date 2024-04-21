@@ -14,6 +14,7 @@ import Footer from './modules/footer/footer';
 import { BrowserRouter, Routes, Route} from "react-router-dom";
 import {useState, useEffect} from 'react';
 import {supabase} from './utils/supabase';
+import ForgotPassword from './pages/forgotPassword/forgotPassword';
 
 
 function App() {
@@ -47,6 +48,8 @@ function App() {
             <Route path ="checkIn" element = {<CheckIn session={session}/>}></Route>
             <Route path ="about" element = {<About/>}></Route>
             <Route path ="contact" element = {<ContactUs/>}></Route>
+            <Route path ="forgotPassword" element = {<ForgotPassword/>}></Route>
+
           </Routes>
           <Footer/>
         </BrowserRouter>
