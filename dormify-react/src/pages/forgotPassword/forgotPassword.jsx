@@ -6,15 +6,16 @@ import { resetPassword } from '../../utils/services/auth';
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const nav = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Call the function to reset the password
+            // Call the function to send the password recovery email
             await resetPassword(email);
-            // Navigate back to the login page after successful reset
-            nav('/login');
+            // Show success message
+            setSuccessMessage('Password recovery email sent successfully. Please check your inbox.');
         } catch (error) {
             setErrorMessage(error.message);
         }
@@ -37,6 +38,7 @@ const ForgotPassword = () => {
                     Reset Password
                 </button>
                 {errorMessage && <p id="errorMessage">{errorMessage}</p>}
+                {successMessage && <p id="successMessage">{successMessage}</p>}
             </form>
         </div>
     );
