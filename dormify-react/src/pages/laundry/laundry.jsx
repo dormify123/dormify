@@ -3,7 +3,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import {reserveSlot, getSlots, removeSlot, slotIsForUser} from '../../utils/services/users';
+import {reserveSlot, getSlots, removeSlot, slotIsForUser, getSlotsByUser} from '../../utils/services/users';
 import BtnMedium from '../../modules/buttons/medium/btn-medium.jsx'
 import "../laundry/laundry.css";
 
@@ -16,9 +16,12 @@ const LaundrySchedule = (session_) => {
   const [deleteDisabled, setDeleteDisabled] = useState(true);
   const [modifyDisabled, setModifyDisabled] = useState(true);
   const [currentSlotForUser, setCurrentSlotForUser] = useState(false);
+  const [slotsForUser, setSlotsForUser] = useState(new Array(0));
   useEffect(()=>{
     const fetchSlots = async () =>{
       let slots = await getSlots(user, 'laundry');
+      let slots_for_user = await getSlotsByUser(user, 'laundry');
+      setSlotsForUser(slots_for_user);
       setEvents(slots);
     }
     fetchSlots();
@@ -65,7 +68,7 @@ const LaundrySchedule = (session_) => {
       return;
     }
 
-    if (selectedSlots.length >= 2) {
+    if (slotsForUser.length >= 2) {
       alert("You can only reserve two slots.");
       selectInfo.view.calendar.unselect();
       return;

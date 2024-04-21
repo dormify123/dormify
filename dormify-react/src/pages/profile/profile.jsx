@@ -1,6 +1,7 @@
 import "./profile.css";
 import profileIcon from '../../assets/profile-icon.png';
 import BtnMedium from '../../modules/buttons/medium/btn-medium'
+import {useNavigate} from 'react-router-dom'
 import { getUserProfileInformation, getUserRole, getUserDorm, changeUserInformation, getUserProfilePicture, leaveDorm, getResidents} from "../../utils/services/users";
 import {useState, useEffect} from 'react';
 import { useFilePicker } from 'use-file-picker';
@@ -12,6 +13,7 @@ import {
 import {Buffer} from 'buffer';
 
 const Profile = (session_) => {
+  const navigate = useNavigate();
   const {session} = session_;
   const {user} = session;
   const [userData, setUserData] = useState(null);
@@ -112,6 +114,9 @@ const Profile = (session_) => {
     }
     ));
   }
+  function handleJoinDormClick(){
+    navigate('/services');
+  }
   return (
     <div className="profile-container">
       <div className="profilecard">
@@ -168,7 +173,7 @@ const Profile = (session_) => {
             <div className="dorm-interactions-box">{userDorm?<>
               <BtnMedium withBorder={true} withBackground={true} backgroundColor={"red"} onClick={handleLeaveDorm}>Leave Dorm</BtnMedium>
             </>:<>
-            <BtnMedium withBorder={true} withBackground={true}>Join a Dorm</BtnMedium>
+            <BtnMedium withBorder={true} withBackground={true} onClick={handleJoinDormClick}>Join a Dorm</BtnMedium>
             </>}
             <BtnMedium withBorder={true} withBackground={true} disabled={disabled} onClick={saveUserChanges}>Save Changes</BtnMedium>
             </div>

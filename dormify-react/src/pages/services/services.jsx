@@ -3,6 +3,7 @@ import "./services.css";
 import BtnMedium from "../../modules/buttons/medium/btn-medium";
 import ResidentsTable from '../../modules/tables/residents/residentsTable';
 import CheckinsTable from '../../modules/tables/checkins/checkinsTable';
+import {useNavigate} from 'react-router-dom'
 import {
   registerUserRole,
   getUserDorm,
@@ -16,11 +17,10 @@ import {
   assignRoom,
   kickUser
 } from "../../utils/services/users";
-import { useNavigate } from "react-router-dom";
 const Services = (session_) => {
+    const nav = useNavigate();
     let {session} = session_;
     let {user} = session;
-    const nav = useNavigate();
     const [userRole, setUserRole] = useState(null);
     const [userDorm, setUserDorm] = useState(0);
     const [roomNum, setRoomNum] = useState(-1);
@@ -162,7 +162,7 @@ const Services = (session_) => {
     let updatedResidents = await getResidents(user);
     setResidents(updatedResidents);
   }
-  return (
+  return ( 
     <>
       <div className="message-top">
         {userRole === "dormowner" && userDorm && (

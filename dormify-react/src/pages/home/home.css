@@ -101,7 +101,7 @@ h2 {
 .photo-buttons {
   margin: 0px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 10px;
 }
 
