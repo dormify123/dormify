@@ -134,6 +134,7 @@ const CleaningSchedule = (session_) => {
     setModifyDisabled(true);
     setDeleteDisabled(true);
     setTempEvent(null);
+    setSlotsForUser(await getSlots(user, 'cleaning'));
   }
   return (
     <div className="cleaning-container">

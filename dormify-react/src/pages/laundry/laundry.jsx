@@ -93,6 +93,7 @@ const LaundrySchedule = (session_) => {
       console.log( await reserveSlot(user, tempEvent, 'laundry'));
       setEvents(await getSlots(user, 'laundry'));
       setSelectedSlots([...selectedSlots, tempEvent]);
+      setSlotsForUser(await getSlotsByUser(user, 'laundry'));
       setModifyDisabled(true);
       setDeleteDisabled(true);
       setTempEvent(null);
@@ -100,6 +101,7 @@ const LaundrySchedule = (session_) => {
   };
 
   const handleEventClick = (info) => {
+    console.log(slotsForUser.length);
     setTempEvent(info.event);
   };
   const handleEventMouseEnter = (info) => {
@@ -135,6 +137,7 @@ const LaundrySchedule = (session_) => {
     setModifyDisabled(true);
     setDeleteDisabled(true);
     setTempEvent(null);
+    setSlotsForUser(await getSlots(user, 'laundry'));
   }
   return (
     <div className="laundry-container">
