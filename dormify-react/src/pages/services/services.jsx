@@ -53,10 +53,16 @@ const Services = (session_) => {
         }
         const fetchUserDorm = async()=>{
             const dorm_query = await getUserDorm(session.user);
-            console.log(dorm_query);
+            const user_role = await getUserRole(session.user);
+            let dorm_name;
             if(dorm_query)
-                setUserDorm(dorm_query.dorm_name);
-            if(userRole === "dormowner" && userDorm != 0)
+            {
+              dorm_name = dorm_query.dorm_name;
+              setUserDorm(dorm_name);
+            }
+            console.log(dorm_name);
+            console.log(user_role);
+            if(user_role === "dormowner" && dorm_name != 0 && dorm_name)
             {
               await fetchResidents(session.user);
               await fetchCheckins(session.user);
@@ -64,21 +70,35 @@ const Services = (session_) => {
         }
         const fetchUserRommNum = async ()=>{
             const room_query = await getUserRoomNumber(user);
-            if(room_query.room_num === null)
+            if(room_query)
+            {
+              if(room_query.room_num === null)
               setRoomNum(-1);
+            }
         }
         const fetchResidents = async ()=>{
+          console.log("fetching residents");
           let inner_role = await getUserRole(user);
           console.log(inner_role);
           if(inner_role === "dormowner")
           {
-            setResidents(await getResidents(user));
+            let residents = await getResidents(user);
+            if(residents.length > 0)
+              setResidents(await getResidents(user));
           }
         };
         const fetchCheckins = async () =>{
-          let checkins = await getCheckins(user);
-          console.log(checkins);
-          setCheckins(checkins);
+          let inner_role = await getUserRole(user);
+          console.log(inner_role);
+          console.log("fetching checkins");
+          if(inner_role === "dormowner")
+          {
+            let checkins = await getCheckins(user);
+            console.log(checkins);
+            if(checkins.length > 0)
+              setCheckins(checkins);
+          }
+
         }
 
         if(!userRole)

@@ -81,7 +81,7 @@ const Profile = (session_) => {
     openFilePicker();
   }
   async function handleLeaveDorm(){
-    await leaveDorm(user);
+    console.log(await leaveDorm(user));
     setUserDorm(null);
   }
   function handleFullNameChange(e) {

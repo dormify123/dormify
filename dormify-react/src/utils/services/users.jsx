@@ -128,6 +128,8 @@ async function createDorm(name_, email_, location_, room_num_, user_session){
     let calendar_id = sequenceQuery[0].value;
     const dataToInsert = [{id: calendar_id, name:"laundry", dorm_name:name_}, {id:calendar_id +1, name:"cleaning", dorm_name:name_}];
     let {error: calendarError} = await supabase.from('calendar').insert(dataToInsert);
+    let {error: sequenceError2} = await supabase.from('sequence').update({value:calendar_id + 2}).eq('table_name', 'calendar');
+    console.log("calendar error here: ");
     if(calendarError)
         console.log(calendarError.message);
 }
@@ -160,7 +162,10 @@ async function getUserProfilePicture(session){
 }
 async function leaveDorm(session){
     let user_role = await getUserRole(session);
-    let user_dorm = await getUserDorm(session);
+    let user_dorm_query = await getUserDorm(session);
+    let user_dorm = user_dorm_query.dorm_name;
+    console.log(user_dorm_query);
+    console.log(user_dorm);
     let {id} = session;
     if(user_role === "resident")
     {
@@ -170,10 +175,15 @@ async function leaveDorm(session){
         let {data: calendarQuery, error: calendarError} = await supabase.from('calendar').select('id').eq('dorm_name', user_dorm);
         if(calendarError)
             console.log(calendarError);
-        console.log(calendarQuery);
-        let calendar_id = calendarQuery[0].id;
-        console.log(await supabase.from('slots').delete().eq('calendar_id', calendar_id));
-        console.log(await supabase.from('calendar').delete().eq('id',calendar_id));
+        if(calendarQuery.length >0)
+        {
+            let calendar_id = calendarQuery[0].id;
+            console.log(await supabase.from('slots').delete().eq('calendar_id', calendar_id));
+            console.log(await supabase.from('calendar').delete().eq('id',calendar_id));
+        }
+        let {error: errorDormDeletion} = await supabase.from('dorm').delete().eq('dorm_name', user_dorm);
+        let {error: errorUnassigningResidents} = await supabase.from('resident').update({dorm_name:null}).eq('dorm_name', user_dorm);
+        return {errorDormDeletion, errorUnassigningResidents};
     }
 
 }
