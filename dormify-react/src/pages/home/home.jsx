@@ -54,7 +54,7 @@ const Home = (session_ ) => {
   };
 
   function onGetStartedClick(e) {
-    handleServiceAccess("services");
+    navigate("\services");
   }
 
   function onLaundryClick(e) {
