@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {getUserRole, getUserDorm} from '../../utils/services/users.jsx'
 import { useNavigate } from "react-router-dom";
 import "./home.css";
 import BtnMedium from "../../modules/buttons/medium/btn-medium.jsx";
@@ -8,15 +9,41 @@ import cleaningLogo from "../../assets/Cleaning-pic.png";
 import keyLogo from "../../assets/Key-pic.png";
 import Modal from "../../modules/modals/modals.jsx";
 
-const Home = ({ session }) => {
+const Home = (session_ ) => {
+  let {session} = session_;
   const navigate = useNavigate();
   const [isModalOpen, setModalOpen] = useState(false);
+    const fetchUserRole = async ()=>{
+      if(session)
+      {
+        let {user} = session;
+        let userRole_query = await getUserRole(user);
+        return userRole_query;
+      }
+    }
+    const fetchUserDorm = async ()=>{
+      if(session)
+      {
+        let {user} = session;
+        let userDormQuery = await getUserDorm(user);
+        let userDorm;
+        if(userDormQuery)
+          userDorm = userDormQuery.dorm_name;
+        return userDorm;
+      }
+    }
 
   const handleModalClose = () => setModalOpen(false);
 
-  const handleServiceAccess = (route) => {
-    if (session) {
-      navigate(route);
+  const handleServiceAccess = async (route) => {
+    let userRole = await fetchUserRole();
+    let userDorm = await fetchUserDorm();
+    console.log(userRole);
+    if (session_ && (userRole === "resident" || userRole === "dormowner")) {
+      if(userDorm)
+        navigate(route);
+      else 
+        navigate("services");
     } else {
       setModalOpen(true);
     }
@@ -31,15 +58,15 @@ const Home = ({ session }) => {
   }
 
   function onLaundryClick(e) {
-    handleServiceAccess("laundry");
+      handleServiceAccess("laundry");
   }
 
   function onCleaningClick(e) {
-    handleServiceAccess("cleaning");
+      handleServiceAccess("cleaning");
   }
 
   function onCheckInClick(e) {
-    handleServiceAccess("checkIn");
+      handleServiceAccess("checkIn");
   }
 
   return (
@@ -58,7 +85,7 @@ const Home = ({ session }) => {
           <p className="shadowed grey-text">
             Implementing Solutions for Efficient Dormitory Management
           </p>
-          {!session ? (
+          {!session_ ? (
             <button className="btn-register" onClick={handleRegisterClick}>
               Register
             </button>
