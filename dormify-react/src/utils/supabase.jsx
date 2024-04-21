@@ -18,6 +18,3 @@ async function getSession(){
   }
 }
 export {supabase, getSession};
-
-
-        
