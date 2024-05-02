@@ -48,8 +48,6 @@ function App() {
             <Route path ="checkIn" element = {<CheckIn session={session}/>}></Route>
             <Route path ="about" element = {<About/>}></Route>
             <Route path ="contact" element = {<ContactUs/>}></Route>
-            <Route path ="forgotPassword" element = {<ForgotPassword/>}></Route>
-            <Route path ="passwordRecovery" element ={<PasswordRecovery/>}></Route>
 
           </Routes>
           <Footer/>
