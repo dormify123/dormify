@@ -41,9 +41,9 @@ const Login = () => {
               name="password"
               required
             />
-            <p className="forgot-password" onClick={onForgotPasswordClick}>
+            {/* <p className="forgot-password" onClick={onForgotPasswordClick}>
               Forgot password?
-            </p>
+            </p> */}
             {/* <input type="checkbox" name="remember" /> Remember password */}
             <button type="submit" className="loginbtn" onClick={form_submit}>
               Login

@@ -1,5 +1,6 @@
 import { supabase } from '../supabase';
 import {createUser} from './users'
+import {useNavigate} from 'react-router-dom'
 async function userSignUp(_email, _password, first_name, last_name, room_number) {
     const {data, error} = await supabase.auth.signUp({
         email: _email,
@@ -49,18 +50,23 @@ async function userSignOut(){
     }
 }
 async function resetPassword(email) {
-    try {
-        // Send a verification email for password recovery
-        const { error: sendEmailError } = await supabase.auth.api.sendPasswordRecoveryEmail(email);
+    console.log(email);
 
-        if (sendEmailError) {
-            throw new Error('Failed to send password recovery email');
-        }
-
-        return true; // Indicate successful password recovery email sent
-    } catch (error) {
-        console.error("Password reset failed:", error.message);
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'https://dormify-dormify123s-projects.vercel.app',
+    })
+    if(!error){
+        console.log("Reset password succesful");
+        return null;
+    }
+    else {
         throw error;
     }
 }
-export {userSignUp, userLogin, userSignOut, resetPassword};
+async function updateUserPassword(email_,password_){
+    
+const { data, error } = await supabase.auth.updateUser({ email: email_,
+    password: password_
+  })
+}
+export {userSignUp, userLogin, userSignOut, resetPassword, updateUserPassword};
