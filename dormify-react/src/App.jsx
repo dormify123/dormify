@@ -15,7 +15,6 @@ import { BrowserRouter, Routes, Route} from "react-router-dom";
 import {useState, useEffect} from 'react';
 import {supabase} from './utils/supabase';
 import ForgotPassword from './pages/forgotPassword/forgotPassword';
-import PasswordRecovery from './pages/password-recovery/passwordRecovery.jsx'
 
 
 function App() {
